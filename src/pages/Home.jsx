@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import logoImage from './images/logo.png';
+import logoImage from '../images/logo.png';
 import './css/Home.css';
 
 function Home() {

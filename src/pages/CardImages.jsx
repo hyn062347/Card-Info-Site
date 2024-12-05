@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import logoImage from './images/logo.png';
+import logoImage from '../images/logo.png';
 import Autosuggest from 'react-autosuggest';
 import axios from 'axios';
-import './App.css';
+import '../App.css';
 import './css/CardImages.css';
 
 function CardImages() {

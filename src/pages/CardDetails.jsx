@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Autosuggest from 'react-autosuggest';
 import axios from 'axios';
-import logoImage from './images/logo.png';
+import logoImage from '../images/logo.png';
+import Header from '../components/Header';
 import './css/CardDetails.css';
 
 function CardDetails() {
   const { cardId } = useParams();
   const [cardDetails, setCardDetails] = useState(null);
-  const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchCardDetails = async () => {
@@ -27,20 +26,6 @@ function CardDetails() {
   if (!cardDetails) {
     return <div>Loading...</div>;
   }
-
-  const handleChange = ({ newValue }) => {
-    setSearchTerm(newValue);
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  const handleSearch = () => {
-    navigate(`/search?q=${searchTerm}`);
-  }
   
   const renderLegality = (legalities) => {
     return Object.entries(legalities).map(([format, legality]) => (
@@ -50,27 +35,7 @@ function CardDetails() {
 
   return (
     <div>
-      <div className='Details_Pages_Search_Bar'>
-        {/* searchbar */}
-        <img
-          src={logoImage}
-          alt= "logo"
-          className='Detail_Pages_Logo'
-          onClick={()=> navigate(`/`)}
-        />
-        <input
-          type="text"
-          inputProps={{
-            placeholder: 'Enter card name...',
-            value: searchTerm,
-            onChange: handleChange,
-            onKeyPress: handleKeyPress
-          }}
-        />
-        <button
-          className='Detail_Pages_Search_Button'
-          onClick={handleSearch}>Search</button>
-      </div>
+      <Header/>
       <div className='Card_Detail_Box_box'>
         <div className='Card_Detail_Box'>
           {/* UpperUI */}

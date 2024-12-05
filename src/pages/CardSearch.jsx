@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
-import logoImage from './images/logo.png';
+import logoImage from '../images/logo.png';
 import './css/CardSearch.css';
 
 function CardSearch() {

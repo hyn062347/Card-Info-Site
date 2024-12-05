@@ -4,7 +4,7 @@ import logoImage from './images/logo.png';
 import Autosuggest from 'react-autosuggest';
 import axios from 'axios';
 import './App.css';
-import './CardImages.css';
+import './css/CardImages.css';
 
 function CardImages() {
   const { oracleId } = useParams();

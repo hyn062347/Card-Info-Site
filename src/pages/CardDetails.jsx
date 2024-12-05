@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Autosuggest from 'react-autosuggest';
 import axios from 'axios';
 import logoImage from './images/logo.png';
-import './CardDetails.css';
+import './css/CardDetails.css';
 
 function CardDetails() {
   const { cardId } = useParams();

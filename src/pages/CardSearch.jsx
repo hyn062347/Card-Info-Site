@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
 import logoImage from './images/logo.png';
-import './CardSearch.css';
+import './css/CardSearch.css';
 
 function CardSearch() {
   const [searchTerm, setSearchTerm] = useState('');

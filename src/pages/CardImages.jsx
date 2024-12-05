@@ -5,6 +5,7 @@ import Autosuggest from 'react-autosuggest';
 import axios from 'axios';
 import '../App.css';
 import './css/CardImages.css';
+import Header from '../components/Header';
 
 function CardImages() {
   const { oracleId } = useParams();
@@ -68,41 +69,7 @@ function CardImages() {
 
   return (
     <div className='Images_Pages_Main'>
-      <div className='Details_Pages_Search_Bar'>
-        <img
-          src={logoImage}
-          alt= "logo"
-          className='Detail_Pages_Logo'
-          onClick={()=> navigate(`/`)}
-        />
-        {/* <input
-          type="text"
-          inputProps={{
-            placeholder: 'Enter card name...',
-            value: searchTerm,
-            onChange: handleChange,
-            onKeyPress: handleKeyPress
-          }}
-        /> */}
-        <div>
-          <Autosuggest
-            suggestions={suggestions}
-            onSuggestionsFetchRequested={({ value }) => setSearchTerm(value)}
-            onSuggestionsClearRequested={() => setSuggestions([])}
-            getSuggestionValue={getSuggestionValue}
-            renderSuggestion={renderSuggestion}
-            inputProps={{
-              placeholder: 'Search for a card',
-              value: searchTerm,
-              onChange: handleChange,
-              onKeyPress: handleKeyPress
-            }}
-          />
-        </div>
-        <button
-          className='Detail_Pages_Search_Button'
-          onClick={handleSearch}>Search</button>
-      </div>
+      <Header/>
       <h1>Card Versions</h1>
       <div className="card-container">
         {cardVersions.map((card, index) => (

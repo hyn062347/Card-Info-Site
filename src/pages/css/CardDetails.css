@@ -49,10 +49,13 @@
   color: #ffffff;
   margin: 15px;
   text-align: left;
+  white-space: pre-line;
+
 }
 
 .box-style p {
   margin: 5px 0;
+
 }
 
 .detail_pages_text {

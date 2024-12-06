@@ -1,29 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DataContext } from '../context/Datacontext';
 import Autosuggest from 'react-autosuggest';
 import axios from 'axios';
 import logoImage from '../images/logo.png';
 import './css/Header.css'
 
 function Header() {
+  const { globalSearchTerm, setGlobalSearchTerm } = useContext(DataContext);
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
 
-    const navigate = useNavigate();
-    const [searchTerm, setSearchTerm] = useState('');
-    const [suggestions, setSuggestions] = useState([]);
-    const [error, setError] = useState('');
-    const handleChange = (event, { newValue }) => {
-        setSearchTerm(newValue);
-      };
-    
-      const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-          handleSearch();
-        }
-      };
-    
-      const handleSearch = () => {
-        navigate(`/search?q=${searchTerm}`);
-      }
+  const handleChange = (event, { newValue }) => {
+    setSearchTerm(newValue);
+    setGlobalSearchTerm(newValue);
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handleSearch = () => {
+    setGlobalSearchTerm(searchTerm);
+    navigate(`/search`);
+  }
 
   useEffect(() => {
     if (searchTerm.length > 2) {
@@ -31,7 +34,8 @@ function Header() {
         .then(response => setSuggestions(response.data.data))
         .catch(error => console.error("Error fetching autocomplete suggestions", error));
     }
-  }, [searchTerm]);
+    console.log(globalSearchTerm);
+  }, [globalSearchTerm, searchTerm]);
 
   const getSuggestionValue = suggestion => suggestion;
 

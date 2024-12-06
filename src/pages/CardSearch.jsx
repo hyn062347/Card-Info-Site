@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DataContext } from '../context/Datacontext';
 import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
 import logoImage from '../images/logo.png';
@@ -9,7 +10,9 @@ function CardSearch() {
   const [searchTerm, setSearchTerm] = useState('');
   const [cardImages, setCardImages] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
+  const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState('');
+  const { globalSearchTerm } = useContext(DataContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,13 +21,19 @@ function CardSearch() {
         .then(response => setSuggestions(response.data.data))
         .catch(error => console.error("Error fetching autocomplete suggestions", error));
     }
-  }, [searchTerm]);
+    if(globalSearchTerm && !hasSearched){
+      setSearchTerm(globalSearchTerm);
+      console.log(globalSearchTerm, searchTerm);
+      handleSearch(globalSearchTerm);
+      setHasSearched(true);
+    }
+  }, [globalSearchTerm, searchTerm]);
 
   const handleChange = (event, { newValue }) => {
     setSearchTerm(newValue);
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (searchTerm) => {
     try {
       const response = await axios.get(`https://api.scryfall.com/cards/search?q=${searchTerm}`);
       const cards = response.data.data;

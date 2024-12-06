@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../App.css';
+import Autosuggest from 'react-autosuggest';
+import logoImage from '../images/logo.png';
 import './css/CardImages.css';
 import Header from '../components/Header';
 
@@ -44,25 +45,25 @@ function CardImages() {
         {cardVersions.map((card, index) => (
           <div className="card" key={index}>
             <div className={`card-flip ${flipped[card.id] ? 'flipped' : ''}`}>
-              <img 
-                src={card.front} 
-                alt="card front" 
+              <img
+                src={card.front}
+                alt="card front"
                 className="card-image front"
                 onClick={() => navigate(`/details/${card.id}`)}
               />
               {card.back && (
-                <img 
-                  src={card.back} 
-                  alt="card back" 
+                <img
+                  src={card.back}
+                  alt="card back"
                   className="card-image back"
                   onClick={() => navigate(`/details/${card.id}`)}
                 />
               )}
             </div>
-            {card.back && <button 
-                            onClick={() => handleFlip(card.id)}
-                            className='Card_Flip_Button'
-                            >Flip</button>}
+            {card.back && <button
+              onClick={() => handleFlip(card.id)}
+              className='Card_Flip_Button'
+            >Flip</button>}
           </div>
         ))}
       </div>

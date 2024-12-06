@@ -20,11 +20,11 @@
 
 /* React Auto Suggest Part */
 
-.search_page_search_container .react-autosuggest__container{
+.react-autosuggest__container{
   width: 400px;
 }
 
-.search_page_search_container .react-autosuggest__input {
+.react-autosuggest__input {
   text-align: center;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -38,20 +38,20 @@
   outline: none;
   width: 400px;
 }
-.search_page_search_container .react-autosuggest__suggestions-container--open{
+.react-autosuggest__suggestions-container--open{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.search_page_search_container .react-autosuggest__suggestions-list{
+.react-autosuggest__suggestions-list{
   padding-left: 0px;
   padding-right: 0px;
   margin-left: 0px;
   margin-right: 0px;
 }
 
-.search_page_search_container .react-autosuggest__suggestion{
+.react-autosuggest__suggestion{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -67,7 +67,7 @@
   transition: all 0.2s ease;
 }
 
-.search_page_search_container .react-autosuggest__suggestion--highlighted{
+.react-autosuggest__suggestion--highlighted{
   background: linear-gradient(45deg, #009dff, #8000ff);
   color: #ffffff;
   transform: scale(1.02);

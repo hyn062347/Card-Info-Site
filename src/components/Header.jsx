@@ -11,7 +11,7 @@ function Header() {
     const [searchTerm, setSearchTerm] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [error, setError] = useState('');
-    const handleChange = ({ newValue }) => {
+    const handleChange = (event, { newValue }) => {
         setSearchTerm(newValue);
       };
     

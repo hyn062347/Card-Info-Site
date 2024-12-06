@@ -1,79 +1,11 @@
-.Details_Pages_Search_Bar {
-  background-color: #ffffff;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 20px;
-  border-radius: 15px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  max-height: 70px;
-}
-
-.Details_Pages_Search_Bar input{
-  text-align: center;
-  width: 30%;
-  font-size: 16px;
-  border: none;
-  border-radius: 20px;
-  outline: none;
-  box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.2);
-  margin: 10px;
-  height: 50px;
-}
-
-.Detail_Pages_Logo{
-  width: 60px;
-  background: linear-gradient(45deg, #009dff, #8000ff);
-  border-radius: 50%;
-  margin: 5px;
-  box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.2);
-  height: 60px;
-}
-
-.Detail_Pages_Logo:hover{
-  cursor: pointer;
-}
-
-.Detail_Pages_Search_Button{
-  background-color: #ffffff;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 30px;
-  font-size: 16px;
-  margin: 10px;
-  background: linear-gradient(45deg, #009dff, #8000ff);
-  color: transparent;
-  font-weight: bold;
-  -webkit-background-clip: text;
-  box-shadow: 0px 0px 10px rgb(0, 0, 0, 0.2);
-  height: 50px;
-}
-
-.Detail_Pages_Search_Button:hover{
-  background: linear-gradient(45deg, #009dff, #8000ff);
-  color: #ffffff;
-  transition: 1s;
-}
-
-.Card_Detail_Box{
+.Card_Detail_Box {
   background-color: #ffffff;
   border-radius: 15px;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding: 40px 0px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  margin: 40px;
-  width: 80%;
+  margin: 0px 15px;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 900px;
-}
-
-.Card_Detail_Box_box{
-  display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -83,19 +15,31 @@
   flex-direction: row;
   margin-left: 5%;
   margin-right: 5%;
-  max-width: 1600px;
-  min-width: 800px;
+  gap: 30px;
 }
 
-.Card_Details_Image {
+
+.Card_Detail_Box .image-container {
   text-align: center;
   flex: 3;
 }
 
-.Card_Details_Text {
-  flex: 7;
-  margin-left: 20px;
+.Card_Detail_Box img {
+  width: 300px;
+  height: auto;
+  border: none;
+  border-radius: 13px;
+  cursor: pointer;
+  backface-visibility: hidden;
+  transition: transform 0.3s;
+  background: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
+
+.Card_Detail_Box .Details_Text {
+  flex: 7;
+}
+
 
 .box-style {
   background: linear-gradient(45deg, #009dff, #8000ff);
@@ -107,19 +51,21 @@
   text-align: left;
 }
 
-.text-style {
-  line-height: 5px;
+.box-style p {
+  margin: 5px 0;
 }
 
 .detail_pages_text {
-  background: linear-gradient(45deg, #009dff, #8000ff);
-  color: transparent;
+  background-color: white;
   font-size: 25px;
   font-weight: bold;
+  background: linear-gradient(45deg, #009dff, #8000ff);
+  color: transparent;
   -webkit-background-clip: text;
+  width: fit-content;
 }
 
-.Detail_Pages_Card_Number{
+.Detail_Pages_Card_Number {
   background: linear-gradient(45deg, #009dff, #8000ff);
   border-radius: 10px;
   padding: 10px;

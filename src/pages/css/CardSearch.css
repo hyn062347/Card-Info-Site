@@ -80,13 +80,14 @@
   padding: 10px 30px;
   font-size: 16px;
   margin: 10px;
+  transition: all 0.2s ease;
 }
 
 .search_page_search_button:hover{
   cursor: pointer;
   background: linear-gradient(45deg, #009dff, #8000ff);
   color: #ffffff;
-  transition: 1s;
+
 }
 
 /* Card Image Part */

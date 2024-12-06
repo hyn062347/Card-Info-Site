@@ -97,8 +97,7 @@ function CardSearch() {
         <div>
           <button 
             className='search_page_search_button'
-            onClick={handleSearch}
-            >Search</button>
+            onClick={handleSearch}>Search</button>
           {error && <p>{error}</p>}
         </div>
       </div>

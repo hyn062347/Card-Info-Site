@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Autosuggest from 'react-autosuggest';
 import axios from 'axios';
 import logoImage from '../images/logo.png';
 import './css/Header.css'
 
-function Header() {
+function Header({setSearchTerm}) {
 
   const navigate = useNavigate();
 
   // 여기부터 AutoSuggest 부분
   const [suggestions, setSuggestions] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [localSearchTerm, setLocalSearchTerm] = useState('');
   const getSuggestionValue = suggestion => suggestion;
   const renderSuggestion = suggestion => (
     <div>
@@ -30,16 +30,17 @@ function Header() {
   };
 
   const handleSearch = () => {
-    navigate(`/search?q=${searchTerm}`);
-  }
+    setSearchTerm(localSearchTerm);
+    navigate('/search');
+  };
 
   useEffect(() => {
-    if (searchTerm.length > 2) {
-      axios.get(`https://api.scryfall.com/cards/autocomplete?q=${searchTerm}`)
+    if (localSearchTerm.length > 2) {
+      axios.get(`https://api.scryfall.com/cards/autocomplete?q=${localSearchTerm}`)
         .then(response => setSuggestions(response.data.data))
         .catch(error => console.error("Error fetching autocomplete suggestions", error));
     }
-  }, [searchTerm]);
+  }, [localSearchTerm]);
   // 여기까지 AutoSuggest
 
   return (
@@ -59,7 +60,7 @@ function Header() {
         renderSuggestion={renderSuggestion}
         inputProps={{
           placeholder: 'Search for a card',
-          value: searchTerm,
+          value: localSearchTerm,
           onChange: handleChange,
           onKeyPress: handleKeyPress
         }}

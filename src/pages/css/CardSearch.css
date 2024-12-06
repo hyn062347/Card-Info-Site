@@ -64,13 +64,13 @@
   border-radius: 15px;
   background-color: white;
   color: black;
+  transition: all 0.2s ease;
 }
 
 .search_page_search_container .react-autosuggest__suggestion--highlighted{
   background: linear-gradient(45deg, #009dff, #8000ff);
   color: #ffffff;
-  transform: scale(1.1);
-  transition: 0.5s;
+  transform: scale(1.02);
 }
 
 .search_page_search_button{

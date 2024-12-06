@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import logoImage from '../images/logo.png';
-import Autosuggest from 'react-autosuggest';
 import axios from 'axios';
 import '../App.css';
 import './css/CardImages.css';
@@ -11,16 +9,9 @@ function CardImages() {
   const { oracleId } = useParams();
   const [cardVersions, setCardVersions] = useState([]);
   const [flipped, setFlipped] = useState({});
-  const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    // if (searchTerm.length > 2) {
-    //   axios.get(`https://api.scryfall.com/cards/autocomplete?q=${searchTerm}`)
-    //     .then(response => setSuggestions(response.data.data))
-    //     .catch(error => console.error("Error fetching autocomplete suggestions", error));
-    // } this is Search function
     const fetchCardVersions = async () => {
       try {
         const response = await axios.get(`https://api.scryfall.com/cards/search?order=released&q=oracleid%3A${oracleId}&unique=prints`);
@@ -36,36 +27,14 @@ function CardImages() {
     };
 
     fetchCardVersions();
-  }, [oracleId], [searchTerm]);
+  }, [oracleId]);
 
-  const handleChange = ({ newValue }) => {
-    setSearchTerm(newValue);
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  const handleSearch = () => {
-    navigate(`/search?q=${searchTerm}`);
-  }
-  
   const handleFlip = id => {
     setFlipped(prevState => ({
       ...prevState,
       [id]: !prevState[id]
     }));
   };
-
-  const getSuggestionValue = suggestion => suggestion;
-
-  const renderSuggestion = suggestion => (
-    <div>
-      {suggestion}
-    </div>
-  );
 
   return (
     <div className='Images_Pages_Main'>

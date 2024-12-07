@@ -24,7 +24,7 @@ function Home() {
           className='home_page_search_button'
           >Search for Cards</button>
       </div>
-      <div className='home_page_sign_box'>
+      {/* <div className='home_page_sign_box'>
         <div 
           className='home_page_sign_button'
           onClick={() => navigate(`/signin`)}
@@ -33,7 +33,7 @@ function Home() {
             className='home_page_sign_button'
             onClick={() => navigate(`/signup`)}
           >Sign Up</div>
-      </div>
+      </div> */}
     </div>
   );
 }

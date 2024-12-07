@@ -21,10 +21,9 @@ function CardSearch() {
         .then(response => setSuggestions(response.data.data))
         .catch(error => console.error("Error fetching autocomplete suggestions", error));
     }
-    if(globalSearchTerm && !hasSearched){
+    if (globalSearchTerm) {
       setSearchTerm(globalSearchTerm);
-      console.log(globalSearchTerm, searchTerm);
-      handleSearch(globalSearchTerm);
+      handleSearch();
       setHasSearched(true);
     }
   }, [globalSearchTerm, searchTerm]);
@@ -33,30 +32,33 @@ function CardSearch() {
     setSearchTerm(newValue);
   };
 
-  const handleSearch = async (searchTerm) => {
+  const handleSearch = async () => {
     try {
-      const response = await axios.get(`https://api.scryfall.com/cards/search?q=${searchTerm}`);
-      const cards = response.data.data;
-      if (cards.length === 0) {
-        setError('No cards found.');
-        setCardImages([]);
-      } else {
-        const images = cards.map(card => {
-          if (card.image_uris) {
-            return { id: card.id, oracle_id: card.oracle_id, front: card.image_uris.normal, back: null };
-          } else if (card.card_faces) {
-            return {
-              id: card.id,
-              oracle_id: card.oracle_id,
-              front: card.card_faces[0].image_uris.normal,
-              back: card.card_faces[1].image_uris.normal
-            };
-          }
-          return { id: card.id, oracle_id: card.oracle_id, front: null, back: null };
-        }).filter(card => card.front);
-        setCardImages(images);
-        setError('');
+      if (searchTerm.length > 2) {
+        const response = await axios.get(`https://api.scryfall.com/cards/search?q=${searchTerm}`);
+        const cards = response.data.data;
+        if (cards.length === 0) {
+          setError('No cards found.');
+          setCardImages([]);
+        } else {
+          const images = cards.map(card => {
+            if (card.image_uris) {
+              return { id: card.id, oracle_id: card.oracle_id, front: card.image_uris.normal, back: null };
+            } else if (card.card_faces) {
+              return {
+                id: card.id,
+                oracle_id: card.oracle_id,
+                front: card.card_faces[0].image_uris.normal,
+                back: card.card_faces[1].image_uris.normal
+              };
+            }
+            return { id: card.id, oracle_id: card.oracle_id, front: null, back: null };
+          }).filter(card => card.front);
+          setCardImages(images);
+          setError('');
+        }
       }
+
     } catch (error) {
       setError('Error fetching data from Scryfall API');
     }
@@ -82,10 +84,10 @@ function CardSearch() {
         <div>
           <img
             className='search_page_logo'
-            src={logoImage} 
-            alt="logo" 
-            onClick={()=> navigate(`/`)}
-            />
+            src={logoImage}
+            alt="logo"
+            onClick={() => navigate(`/`)}
+          />
         </div>
         <h1>Card Search</h1>
         <div className='search_page_search_container'>
@@ -104,7 +106,7 @@ function CardSearch() {
           />
         </div>
         <div>
-          <button 
+          <button
             className='search_page_search_button'
             onClick={handleSearch}>Search</button>
           {error && <p>{error}</p>}
@@ -112,14 +114,14 @@ function CardSearch() {
       </div>
       <div className='search_page_cards_container'>
         {cardImages.map((card, index) => (
-          <div 
+          <div
             className='search_page_card_box'
             key={index}>
-            <img 
+            <img
               className='search_page_card_image'
               width={350}
-              src={card.front} 
-              alt="card front" 
+              src={card.front}
+              alt="card front"
               onMouseOver={e => e.currentTarget.src = card.back || card.front}
               onMouseOut={e => e.currentTarget.src = card.front}
               onClick={() => navigate(`/images/${card.oracle_id}`)}

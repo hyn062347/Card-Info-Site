@@ -28,10 +28,43 @@ function CardDetails() {
   }
 
   const renderLegality = (legalities) => {
-    return Object.entries(legalities).map(([format, legality]) => (
-      <p key={format}><strong>{format}:</strong> {legality}</p>
-    ));
+    return Object.entries(legalities)
+      .filter(([format, legality]) => legality !== "not_legal") // 필터링
+      .map(([format, legality]) => (
+        <p key={format}>
+          <strong className="capitalize">{format}:</strong> {legality}
+        </p>
+      ));
   };
+
+  const renderDetail = (cardFace) => {
+    return (
+      <>
+        <p className="box-style"><strong>Name:</strong> {cardFace.name}</p>
+        <p className="box-style"><strong>Mana Cost:</strong> {cardFace.mana_cost}</p>
+        <p className="box-style"><strong>Type:</strong> {cardFace.type_line}</p>
+        <p className="box-style"><strong>Oracle Text</strong><br />{cardFace.oracle_text}</p>
+      </>
+    );
+  }
+
+  const renderArt = (cardDetails) => {
+
+    const artType = cardDetails.full_art
+      ? "Full Art"
+      : cardDetails.textless
+        ? "Textless"
+        : cardDetails.border_color === "borderless"
+          ? "Borderless"
+          : "Normal";
+
+    return (
+      <p className="Detail_Pages_Card_Number">
+        <strong>Art Type:</strong> {artType}
+      </p>
+    );
+
+  }
 
   return (
     <div>
@@ -49,33 +82,22 @@ function CardDetails() {
                 alt="Card Back"
               />
               <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
+              {renderArt(cardDetails.card_faces[0])}
             </div>
             <div className='Details_Text'>
               {/* card details */}
               <div>
                 {/* front */}
                 <div className='detail_pages_text'>Front</div>
-                <p className="box-style"><strong>Name:</strong> {cardDetails.card_faces[0].name}</p>
-                <p className="box-style"><strong>Mana Cost:</strong>{" "}{cardDetails.card_faces[0].mana_cost}</p>
-                <p className="box-style"><strong>Type:</strong> {cardDetails.card_faces[0].type_line}</p>
-                <p className="box-style"><strong>Oracle Text</strong><br/>{cardDetails.card_faces[0].oracle_text}</p>
+                {renderDetail(cardDetails.card_faces[0])}
               </div>
               <div>
                 {/* back */}
                 <div className='detail_pages_text'>Back</div>
-                <p className="box-style"><strong>Name:</strong> {cardDetails.card_faces[1].name}</p>
-                <p className="box-style"><strong>Mana Cost: </strong>{cardDetails.card_faces[1].mana_cost}</p>
-                <p className="box-style"><strong>Type: </strong>{cardDetails.card_faces[1].type_line}</p>
-                <p className="box-style"><strong>Oracle Text</strong><br/>{cardDetails.card_faces[1].oracle_text}</p>
+                {renderDetail(cardDetails.card_faces[1])}
                 <div className='detail_pages_text'>Legalities</div>
                 <p className="box-style">
-                  <p><strong>Standard: </strong>{cardDetails.legalities.standard}</p>
-                  <p><strong>Pioneer: </strong>{cardDetails.legalities.pioneer}</p>
-                  <p><strong>Modern: </strong>{cardDetails.legalities.modern}</p>
-                  <p><strong>Legacy: </strong>{cardDetails.legalities.legacy}</p>
-                  <p><strong>Vintage: </strong>{cardDetails.legalities.vintage}</p>
-                  <p><strong>Pauper: </strong>{cardDetails.legalities.pauper}</p>
-                  <p><strong>Commander: </strong>{cardDetails.legalities.commander}</p>
+                  {renderLegality(cardDetails.legalities)}
                 </p>
                 <p className="box-style"><strong>Set Name: </strong>{cardDetails.set_name}</p>
               </div>
@@ -83,32 +105,20 @@ function CardDetails() {
           </div>
         ) : (
           <div className='Flex_Row'>
-            <div>
-              <div>
-                <img
-                  src={cardDetails.image_uris.normal}
-                  alt="Card Front"
-                />
-              </div>
-              <div>
-                <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
-              </div>
+            <div className='image-container'>
+              <img
+                src={cardDetails.image_uris.normal}
+                alt="Card Front"
+              />
+              <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
+              {renderArt(cardDetails)}
             </div>
             <div className='Details_Text'>
               <div className='detail_pages_text'>Information</div>
-              <p className="box-style"><strong>Name:</strong> {cardDetails.name}</p>
-              <p className="box-style"><strong>Mana Cost:</strong> {cardDetails.mana_cost}</p>
-              <p className="box-style"><strong>Type:</strong> {cardDetails.type_line}</p>
-              <p className="box-style"><strong>Oracle Text</strong><br/> {cardDetails.oracle_text}</p>
+              {renderDetail(cardDetails)}
               <div className='detail_pages_text'>Legalities</div>
               <p className="box-style">
-                <p><strong>Standard: </strong>{cardDetails.legalities.standard}</p>
-                <p><strong>Pioneer: </strong>{cardDetails.legalities.pioneer}</p>
-                <p><strong>Modern: </strong> {cardDetails.legalities.modern}</p>
-                <p><strong>Legacy: </strong> {cardDetails.legalities.legacy}</p>
-                <p><strong>Vintage: </strong> {cardDetails.legalities.vintage}</p>
-                <p><strong>Pauper: </strong> {cardDetails.legalities.pauper}</p>
-                <p><strong>Commander: </strong> {cardDetails.legalities.commander}</p>
+                {renderLegality(cardDetails.legalities)}
               </p>
               <p className="box-style">
                 <strong>Set Name: </strong>

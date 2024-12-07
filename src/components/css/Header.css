@@ -24,12 +24,12 @@
     color: transparent;
     font-weight: bold;
     -webkit-background-clip: text;
+    transition: all 0.2s ease;
 }
 
 .header-bar-button:hover {
     background: linear-gradient(45deg, #009dff, #8000ff);
     color: white;
-    transition: 0.2s;
 }
 
 .header-logo {

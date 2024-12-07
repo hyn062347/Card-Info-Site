@@ -25,13 +25,13 @@
   font-size: 16px;
   margin: 10px;
   color: black;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .home_page_search_button:hover{
   background: linear-gradient(45deg, #009dff, #8000ff);
   color: #ffffff;
-  transition: 0.5s;
-  cursor: pointer;
 }
 
 /* Sign In & Sign Up Button Part */

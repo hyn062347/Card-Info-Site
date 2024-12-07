@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Autosuggest from 'react-autosuggest';
+// import cheerio from 'cheerio';
 import axios from 'axios';
-import logoImage from '../images/logo.png';
 import Header from '../components/Header';
 import './css/CardDetails.css';
 
 function CardDetails() {
   const { cardId } = useParams();
-  const [cardDetails, setCardDetails] = useState(null);
+  const [ cardDetails, setCardDetails ] = useState(null);
+  const [ cardKingdomPrice, setCardKingdomPrice] = useState('Loading...');
 
   useEffect(() => {
     const fetchCardDetails = async () => {
@@ -20,12 +20,30 @@ function CardDetails() {
       }
     };
 
+    // const fetchCardPrice = async (cardName, setName) => {
+    //   try {
+    //     // CardKingdom 검색 URL 생성
+    //     const searchUrl = `https://www.cardkingdom.com/catalog/search?search=header&filter%5Bname%5D=${encodeURIComponent(cardName)}&filter%5Bcategory_id%5D=${encodeURIComponent(setName)}`;
+
+    //     const response = await axios.get(searchUrl);
+    //     const $ = cheerio.load(response.data);
+
+    //     // CardKingdom에서 가격 정보 추출 (HTML 구조에 따라 변경 가능)
+    //     const price = $('.price-container .item-price').first().text().trim();
+    //     setCardKingdomPrice(price || 'Price not found'); // 가격 정보 설정
+    //   } catch (error) {
+    //     console.error('Error fetching price from CardKingdom:', error);
+    //     setCardKingdomPrice('Error fetching price');
+    //   }
+    // };
+
     fetchCardDetails();
   }, [cardId]);
 
   if (!cardDetails) {
     return <div>Loading...</div>;
   }
+
 
   const renderLegality = (legalities) => {
     return Object.entries(legalities)
@@ -50,13 +68,19 @@ function CardDetails() {
 
   const renderArt = (cardDetails) => {
 
-    const artType = cardDetails.full_art
-      ? "Full Art"
-      : cardDetails.textless
-        ? "Textless"
+    const artType = cardDetails.textless
+      ? "Textless"
+      : cardDetails.full_art
+        ? "Full Art"
         : cardDetails.border_color === "borderless"
           ? "Borderless"
-          : "Normal";
+          : cardDetails.frame_effects?.includes("extendedart")
+            ? "Extended Art"
+            : cardDetails.frame_effects?.includes("showcase")
+              ? "Showcase"
+              : cardDetails.frame_effects?.includes("etched")
+                ? "Etched"
+                : "Normal";
 
     return (
       <p className="Detail_Pages_Card_Number">

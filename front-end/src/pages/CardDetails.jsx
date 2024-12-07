@@ -8,7 +8,9 @@ function CardDetails() {
   const { cardId } = useParams();
   const [ cardDetails, setCardDetails ] = useState(null);
   const [ cardKingdomPrice, setCardKingdomPrice] = useState('Loading...');
-
+  const [ cardKingdomFoilPrice, setCardKingdomFoilPrice ] = useState('Loading...');
+  const API_BASE_URL = 'http://localhost:3001';
+  
   useEffect(() => {
     const fetchCardDetails = async () => {
       try {
@@ -19,21 +21,30 @@ function CardDetails() {
       }
     };
 
-
-    const fetchCardKingdomPrice = async (cardName, collectorNumber) => {
-      try{
-        const response = await axios.get('http://localhost:3001/api/price',{
-          params:{ cardName, collectorNumber},
-        });
-        console.log('Price:', response.data.price);
-        return response.data.price;
-      } catch(error){
-        console.error('Error fetching price:', error);
-      }
-    };
-
     fetchCardDetails();
   }, [cardId]);
+
+  useEffect(() => {
+    if (cardDetails) {
+      const fetchCardKingdomPrice = async (cardName, collectorNumber) => {
+        try {
+          const simplifiedCardName = cardName.includes('//')
+          ? cardName.split('//')[0].trim()
+          : cardName;
+          const modifiedCollectorNumber = collectorNumber.replace(/\D/g, ''); // \D는 숫자가 아닌 문자 제거
+          const response = await axios.get(`${API_BASE_URL}/api/price`, {
+            params: { cardName: simplifiedCardName, collectorNumber: modifiedCollectorNumber },
+          });
+          console.log('Price:', response.data.price);
+          setCardKingdomPrice(response.data.price);
+        } catch (error) {
+          console.error('Error fetching price:', error);
+        }
+      };
+
+      fetchCardKingdomPrice(cardDetails.name, cardDetails.collector_number);
+    }
+  }, [cardDetails]);
 
   if (!cardDetails) {
     return <div>Loading...</div>;
@@ -102,6 +113,7 @@ function CardDetails() {
               />
               <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
               {renderArt(cardDetails.card_faces[0])}
+              <p className='Detail_Pages_Card_Number'><strong>CardKingdom Price: {cardKingdomPrice}</strong></p>
             </div>
             <div className='Details_Text'>
               {/* card details */}
@@ -131,6 +143,7 @@ function CardDetails() {
               />
               <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
               {renderArt(cardDetails)}
+              <p className='Detail_Pages_Card_Number'><strong>CardKingdom Price: {cardKingdomPrice}</strong></p>
             </div>
             <div className='Details_Text'>
               <div className='detail_pages_text'>Information</div>

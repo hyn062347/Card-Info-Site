@@ -35,8 +35,8 @@ function CardDetails() {
           const response = await axios.get(`${API_BASE_URL}/api/price`, {
             params: { cardName: simplifiedCardName, collectorNumber: modifiedCollectorNumber },
           });
-          console.log('Price:', response.data.price);
-          setCardKingdomPrice(response.data.price);
+          setCardKingdomPrice(response.data.nonFoilPrice);
+          setCardKingdomFoilPrice(response.data.foilPrice);
         } catch (error) {
           console.error('Error fetching price:', error);
         }
@@ -112,8 +112,9 @@ function CardDetails() {
                 alt="Card Back"
               />
               <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
-              {renderArt(cardDetails.card_faces[0])}
-              <p className='Detail_Pages_Card_Number'><strong>CardKingdom Price: {cardKingdomPrice}</strong></p>
+              {renderArt(cardDetails)}
+              <p className='Detail_Pages_Card_Number'><strong>CardKingdom: {cardKingdomPrice}</strong></p>
+              <p className='Detail_Pages_Card_Number'><strong>CardKingdom(Foil): {cardKingdomFoilPrice}</strong></p>
             </div>
             <div className='Details_Text'>
               {/* card details */}
@@ -143,7 +144,8 @@ function CardDetails() {
               />
               <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
               {renderArt(cardDetails)}
-              <p className='Detail_Pages_Card_Number'><strong>CardKingdom Price: {cardKingdomPrice}</strong></p>
+              <p className='Detail_Pages_Card_Number'><strong>CardKingdom: {cardKingdomPrice}</strong></p>
+              <p className='Detail_Pages_Card_Number'><strong>CardKingdom(Foil): {cardKingdomFoilPrice}</strong></p>
             </div>
             <div className='Details_Text'>
               <div className='detail_pages_text'>Information</div>

@@ -7,6 +7,7 @@
 3. 기능
 4. 프로젝트 의존성
 5. 프로젝트 실행
+6. 쇼케이스
 
 ## 소개
 이 사이트는 원하는 카드의 모든 버전을 쉽게 검색하고 상세 정보를 확인하기 위해 개발했습니다.
@@ -86,3 +87,29 @@ cd back-end/
 ```bash
 node server.js
 ```
+
+## 쇼케이스
+<img width="2027" alt="스크린샷 2024-12-09 19 34 32" src="https://github.com/user-attachments/assets/434d41a2-4761-4e3f-8a62-3827594ddc46">
+초기화면
+
+<img width="2029" alt="스크린샷 2024-12-09 19 35 25" src="https://github.com/user-attachments/assets/6dc7fdae-02fa-451e-a207-8cac1f00d025">
+검색화면 (자동완성)
+
+<img width="2029" alt="스크린샷 2024-12-09 19 36 04" src="https://github.com/user-attachments/assets/7c903023-977d-4e4d-a3fb-435992687fcd">
+검색 결과 화면
+
+<img width="2030" alt="스크린샷 2024-12-09 19 36 38" src="https://github.com/user-attachments/assets/101038cd-6d53-462a-8457-359bf88d0d57">
+카드 선택 후 카드 버전 선택화면
+
+<img width="1067" alt="스크린샷 2024-12-09 19 53 27" src="https://github.com/user-attachments/assets/054e368f-bbc6-46d6-a4fc-11b86fb96089">
+카드 디테일 화면
+
+<img width="1067" alt="스크린샷 2024-12-09 19 58 12" src="https://github.com/user-attachments/assets/f943721e-408b-46a6-8acf-0c2b60553785">
+헤더 컴포넌트 자동완성
+
+
+
+
+
+
+

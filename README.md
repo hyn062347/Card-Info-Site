@@ -3,14 +3,19 @@
 
 ## 목차
 1. 소개
-2. 개발환경
-3. 기능
-4. 프로젝트 의존성
-5. 프로젝트 실행
-6. 쇼케이스
+2. 프로젝트 구조도
+3. 개발환경
+4. 기능
+5. 프로젝트 의존성
+6. 프로젝트 실행
+7. 쇼케이스
 
 ## 소개
 이 사이트는 원하는 카드의 모든 버전을 쉽게 검색하고 상세 정보를 확인하기 위해 개발했습니다.
+
+## 프로젝트 구조도
+<img width="755" alt="스크린샷 2024-12-10 22 43 29" src="https://github.com/user-attachments/assets/2b908235-e679-4e18-a5b5-7698f0119b5f">
+
 
 ## 개발환경
 `MacOS 15.1`
@@ -53,10 +58,6 @@ cd back-end/
 
 ```bash
 npm install axios
-```
-
-```bash
-npm install cheerio
 ```
 
 ```bash
@@ -106,6 +107,7 @@ node server.js
 
 <img width="1067" alt="스크린샷 2024-12-09 19 58 12" src="https://github.com/user-attachments/assets/f943721e-408b-46a6-8acf-0c2b60553785">
 헤더 컴포넌트 자동완성
+
 
 
 

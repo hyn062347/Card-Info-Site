@@ -1,10 +1,10 @@
-card(
+create table card(
 card_name varchar,
 card_number number,
 constraint card_pk primary key(card_name, card_number)
 );
 
-site(
+create table site(
 site_name varchar,
 card_name varchar,
 card_number number,

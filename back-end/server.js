@@ -27,6 +27,16 @@ const fetchCardPrice = async (cardName, collectorNumber, isFoil = false) => {
   const page = await browser.newPage();
 
   try {
+    // 불필요한 리소스 차단
+    await page.setRequestInterception(true);
+    page.on('request', (req) => {
+      if (['image', 'stylesheet', 'font', 'script', 'media', 'xhr', 'fetch'].includes(req.resourceType())) {
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+
     const baseUrl = isFoil
       ? `https://www.cardkingdom.com/catalog/search?filter[tab]=mtg_foil&filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=${encodeURIComponent(
           cardName
@@ -34,7 +44,7 @@ const fetchCardPrice = async (cardName, collectorNumber, isFoil = false) => {
       : `https://www.cardkingdom.com/catalog/view?filter[search]=mtg_advanced&filter[name]=${encodeURIComponent(
           cardName
         )}`;
-    await page.goto(baseUrl, { waitUntil: 'networkidle2' });
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded' }); // HTML 로딩만 대기
 
     // Collector Number와 매칭되는 가격을 가져옴
     const possibleFormats = generatePossibleFormats(collectorNumber); // 가능한 모든 형식 생성

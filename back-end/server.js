@@ -114,7 +114,7 @@ app.get('/api/price', async (req, res) => {
 app.get('/api/summarize-stream', async (req, res) => {
   const { name, mana_cost, type_line, oracle_text } = req.query;
   console.log(name, mana_cost, type_line);
-  if (!name || !mana_cost || !type_line || !oracle_text) {
+  if (!name || !type_line || !oracle_text) {
     return res.status(400).json({ error: 'All card details are required.' });
   }
 

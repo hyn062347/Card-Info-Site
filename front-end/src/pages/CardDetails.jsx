@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
+import ReactMarkdown from 'react-markdown';
 import './css/CardDetails.css';
 
 function CardDetails() {
@@ -27,23 +28,6 @@ function CardDetails() {
 
   useEffect(() => {
     if (cardDetails) {
-      const summarizeCardDetails = async () => {
-        try {
-          const response = await axios.post(`${API_BASE_URL}/api/summarize`, {
-            name: cardDetails.name,
-            mana_cost: cardDetails.mana_cost,
-            type_line: cardDetails.type_line,
-            oracle_text: cardDetails.oracle_text,
-          });
-          setCardSummary(response.data.summary);
-        } catch (error) {
-          console.error('Error summarizing card details:', error);
-          setCardSummary('Failed to generate summary.');
-        }
-      };
-
-      summarizeCardDetails(cardDetails);
-
       const fetchCardKingdomPrice = async (cardName, collectorNumber) => {
         try {
           const simplifiedCardName = cardName.includes('//')
@@ -61,6 +45,33 @@ function CardDetails() {
       };
 
       fetchCardKingdomPrice(cardDetails.name, cardDetails.collector_number);
+    }
+  }, [cardDetails]);
+
+  useEffect(() => {
+    if (cardDetails) {
+      const eventSource = new EventSource(
+        `${API_BASE_URL}/api/summarize-stream?name=${encodeURIComponent(
+          cardDetails.name
+        )}&mana_cost=${encodeURIComponent(cardDetails.mana_cost)}&type_line=${encodeURIComponent(
+          cardDetails.type_line
+        )}&oracle_text=${encodeURIComponent(cardDetails.oracle_text)}`
+      );
+
+      eventSource.onmessage = (event) => {
+        if (event.data === '[DONE]') {
+          eventSource.close(); // 스트리밍 종료
+        } else {
+          setCardSummary((prev) => (prev === 'Loading...' ? event.data : prev + event.data)); // 실시간 데이터 업데이트
+        }
+      };
+
+      eventSource.onerror = (error) => {
+        console.error('Error receiving stream:', error);
+        eventSource.close(); // 에러 발생 시 스트리밍 종료
+      };
+
+      return () => eventSource.close(); // 컴포넌트 언마운트 시 스트림 종료
     }
   }, [cardDetails]);
 
@@ -152,7 +163,7 @@ function CardDetails() {
                 <div className='detail_pages_text'>Other</div>
                 <p className="box-style"><strong>Set Name: </strong>{cardDetails.set_name}</p>
                 <p className="box-style">
-                  <strong>Summary: </strong>{cardSummary}
+                  <ReactMarkdown>{cardSummary}</ReactMarkdown>
                 </p>
               </div>
             </div>
@@ -182,7 +193,7 @@ function CardDetails() {
                 {cardDetails.set_name}
               </p>
               <p className="box-style">
-                <strong>Summary: </strong>{cardSummary}
+                <ReactMarkdown>{cardSummary}</ReactMarkdown>
               </p>
             </div>
           </div>

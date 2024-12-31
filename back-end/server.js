@@ -111,16 +111,18 @@ app.get('/api/price', async (req, res) => {
 });
 
 //AI Service
-app.post('/api/summarize', async (req, res) => {
-  const { name, mana_cost, type_line, oracle_text } = req.body;
-  console.log( name, mana_cost, type_line, oracle_text );
-  // 입력 데이터 검증
+app.get('/api/summarize-stream', async (req, res) => {
+  const { name, mana_cost, type_line, oracle_text } = req.query;
+  console.log(name, mana_cost, type_line);
   if (!name || !mana_cost || !type_line || !oracle_text) {
-    return res.status(400).json({ error: 'All card details (name, mana_cost, type_line, oracle_text) are required.' });
+    return res.status(400).json({ error: 'All card details are required.' });
   }
 
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
   try {
-    // OpenAI API 요청
     const response = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
@@ -130,14 +132,13 @@ app.post('/api/summarize', async (req, res) => {
         },
         {
           role: 'user',
-          content: `Summarize the following Magic: The Gathering card details concisely:
+          content: `Provide insights on the following Magic: The Gathering card details concisely (under 1000 characters):
 
 Name: ${name}
 Mana Cost: ${mana_cost}
 Type Line: ${type_line}
 Oracle Text: ${oracle_text}
 
-In addition to the summary, provide insights on:
 1. What type of deck this card is commonly used in (e.g., aggro, control, combo).
 2. When or under what circumstances this card is typically played or most effective (e.g., early game, late game, in response to a specific strategy).
 `,
@@ -146,29 +147,21 @@ In addition to the summary, provide insights on:
       stream: true,
     });
 
-    //streaming 방식으로 데이터 전달
-    // for await (const chunk of response.data){
-    //   const content = chunk.choices[0].delta;
-    //   if(content){
-    //     res.write(`data: ${content}\n\n`);
-    //   }
-    // }
-
-    // res.write('data: [DONE]\n\n');
     for await (const part of response) {
       const content = part.choices[0]?.delta?.content || '';
       if (content) {
-        console.log(content); // 스트리밍 데이터 출력
-        res.write(`data: ${content}\n\n`); // 클라이언트로 전송
+        res.write(`data: ${content}\n\n`); // 스트리밍 데이터 전송
       }
     }
-    
+
+    res.write('data: [DONE]\n\n'); // 스트리밍 종료
     res.end();
   } catch (error) {
-    console.error('Error summarizing card details:', error);
+    console.error('Error streaming response:', error);
     res.status(500).json({ error: 'Failed to summarize card details.' });
   }
 });
+
 
 
 // 서버 실행

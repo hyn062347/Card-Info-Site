@@ -1,4 +1,5 @@
 require('dotenv').config();
+const OpenAI = require('openai');
 const express = require('express');
 const puppeteer = require('puppeteer');
 const app = express();
@@ -6,8 +7,18 @@ const PORT = 3001;
 const cors = require('cors');
 
 app.use(cors());
-
 app.use(express.json());
+
+// OpenAI API configuration
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+if (!process.env.OPENAI_API_KEY) {
+  console.error('Error: Missing OpenAI API key in environment variables.');
+  process.exit(1); // Exit the server
+}
+
 
 // 가능한 모든 Collector Number 형식을 생성하는 함수
 const generatePossibleFormats = (collectorNumber) => {
@@ -40,11 +51,11 @@ const fetchCardPrice = async (cardName, collectorNumber, isFoil = false) => {
 
     const baseUrl = isFoil
       ? `https://www.cardkingdom.com/catalog/search?filter[tab]=mtg_foil&filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=${encodeURIComponent(
-          cardName
-        )}`
+        cardName
+      )}`
       : `https://www.cardkingdom.com/catalog/view?filter[search]=mtg_advanced&filter[name]=${encodeURIComponent(
-          cardName
-        )}`;
+        cardName
+      )}`;
     await page.goto(baseUrl, { waitUntil: 'domcontentloaded' }); // HTML 로딩만 대기
 
     // Collector Number와 매칭되는 가격을 가져옴
@@ -71,12 +82,12 @@ const fetchCardPrice = async (cardName, collectorNumber, isFoil = false) => {
       return 'Price not found';
     }, possibleFormats);
 
-    await browser.close();
     return price;
   } catch (error) {
     console.error(`Error fetching ${isFoil ? 'foil' : 'non-foil'} price:`, error);
-    await browser.close();
     throw error;
+  } finally {
+    await browser.close();
   }
 };
 
@@ -100,46 +111,65 @@ app.get('/api/price', async (req, res) => {
 });
 
 //AI Service
-const OPEN_API_KEY = process.env.OPEN_API_KEY;
-
 app.post('/api/summarize', async (req, res) => {
-  const { cardDetails } = req.body;
-
-  if (!cardDetails) {
-    return res.status(400).json({ error: 'Card details are required for summarization.' });
+  const { name, mana_cost, type_line, oracle_text } = req.body;
+  console.log( name, mana_cost, type_line, oracle_text );
+  // 입력 데이터 검증
+  if (!name || !mana_cost || !type_line || !oracle_text) {
+    return res.status(400).json({ error: 'All card details (name, mana_cost, type_line, oracle_text) are required.' });
   }
 
   try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a helpful assistant that summarizes card details.',
-          },
-          {
-            role: 'user',
-            content: `Summarize the following card details: ${JSON.stringify(cardDetails)}`,
-          },
-        ],
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
+    // OpenAI API 요청
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are an assistant specialized in Magic: The Gathering cards.',
         },
-      }
-    );
+        {
+          role: 'user',
+          content: `Summarize the following Magic: The Gathering card details concisely:
 
-    const summary = response.data.choices[0].message.content;
-    res.json({ summary });
+Name: ${name}
+Mana Cost: ${mana_cost}
+Type Line: ${type_line}
+Oracle Text: ${oracle_text}
+
+In addition to the summary, provide insights on:
+1. What type of deck this card is commonly used in (e.g., aggro, control, combo).
+2. When or under what circumstances this card is typically played or most effective (e.g., early game, late game, in response to a specific strategy).
+`,
+        },
+      ],
+      stream: true,
+    });
+
+    //streaming 방식으로 데이터 전달
+    // for await (const chunk of response.data){
+    //   const content = chunk.choices[0].delta;
+    //   if(content){
+    //     res.write(`data: ${content}\n\n`);
+    //   }
+    // }
+
+    // res.write('data: [DONE]\n\n');
+    for await (const part of response) {
+      const content = part.choices[0]?.delta?.content || '';
+      if (content) {
+        console.log(content); // 스트리밍 데이터 출력
+        res.write(`data: ${content}\n\n`); // 클라이언트로 전송
+      }
+    }
+    
+    res.end();
   } catch (error) {
     console.error('Error summarizing card details:', error);
     res.status(500).json({ error: 'Failed to summarize card details.' });
   }
 });
+
 
 // 서버 실행
 app.listen(PORT, () => {

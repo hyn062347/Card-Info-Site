@@ -6,11 +6,12 @@ import './css/CardDetails.css';
 
 function CardDetails() {
   const { cardId } = useParams();
-  const [ cardDetails, setCardDetails ] = useState(null);
-  const [ cardKingdomPrice, setCardKingdomPrice] = useState('Loading...');
-  const [ cardKingdomFoilPrice, setCardKingdomFoilPrice ] = useState('Loading...');
+  const [cardDetails, setCardDetails] = useState(null);
+  const [cardKingdomPrice, setCardKingdomPrice] = useState('Loading...');
+  const [cardKingdomFoilPrice, setCardKingdomFoilPrice] = useState('Loading...');
+  const [cardSummary, setCardSummary] = useState('Loading...');
   const API_BASE_URL = 'http://localhost:3001';
-  
+
   useEffect(() => {
     const fetchCardDetails = async () => {
       try {
@@ -26,11 +27,28 @@ function CardDetails() {
 
   useEffect(() => {
     if (cardDetails) {
+      const summarizeCardDetails = async () => {
+        try {
+          const response = await axios.post(`${API_BASE_URL}/api/summarize`, {
+            name: cardDetails.name,
+            mana_cost: cardDetails.mana_cost,
+            type_line: cardDetails.type_line,
+            oracle_text: cardDetails.oracle_text,
+          });
+          setCardSummary(response.data.summary);
+        } catch (error) {
+          console.error('Error summarizing card details:', error);
+          setCardSummary('Failed to generate summary.');
+        }
+      };
+
+      summarizeCardDetails(cardDetails);
+
       const fetchCardKingdomPrice = async (cardName, collectorNumber) => {
         try {
           const simplifiedCardName = cardName.includes('//')
-          ? cardName.split('//')[0].trim()
-          : cardName;
+            ? cardName.split('//')[0].trim()
+            : cardName;
           const modifiedCollectorNumber = collectorNumber.replace(/\D/g, ''); // \D는 숫자가 아닌 문자 제거
           const response = await axios.get(`${API_BASE_URL}/api/price`, {
             params: { cardName: simplifiedCardName, collectorNumber: modifiedCollectorNumber },
@@ -133,6 +151,9 @@ function CardDetails() {
                 </p>
                 <div className='detail_pages_text'>Other</div>
                 <p className="box-style"><strong>Set Name: </strong>{cardDetails.set_name}</p>
+                <p className="box-style">
+                  <strong>Summary: </strong>{cardSummary}
+                </p>
               </div>
             </div>
           </div>
@@ -159,6 +180,9 @@ function CardDetails() {
               <p className="box-style">
                 <strong>Set Name: </strong>
                 {cardDetails.set_name}
+              </p>
+              <p className="box-style">
+                <strong>Summary: </strong>{cardSummary}
               </p>
             </div>
           </div>

@@ -1,9 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const puppeteer = require('puppeteer');
-
 const app = express();
 const PORT = 3001;
 const cors = require('cors');
+
 app.use(cors());
 
 app.use(express.json());
@@ -95,6 +96,48 @@ app.get('/api/price', async (req, res) => {
     res.json({ nonFoilPrice, foilPrice });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch card prices' });
+  }
+});
+
+//AI Service
+const OPEN_API_KEY = process.env.OPEN_API_KEY;
+
+app.post('/api/summarize', async (req, res) => {
+  const { cardDetails } = req.body;
+
+  if (!cardDetails) {
+    return res.status(400).json({ error: 'Card details are required for summarization.' });
+  }
+
+  try {
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a helpful assistant that summarizes card details.',
+          },
+          {
+            role: 'user',
+            content: `Summarize the following card details: ${JSON.stringify(cardDetails)}`,
+          },
+        ],
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+        },
+      }
+    );
+
+    const summary = response.data.choices[0].message.content;
+    res.json({ summary });
+  } catch (error) {
+    console.error('Error summarizing card details:', error);
+    res.status(500).json({ error: 'Failed to summarize card details.' });
   }
 });
 

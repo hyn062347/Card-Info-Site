@@ -128,9 +128,10 @@ function CardDetails() {
                 <div className='detail_pages_text'>Back</div>
                 {renderDetail(cardDetails.card_faces[1])}
                 <div className='detail_pages_text'>Legalities</div>
-                <p className="box-style">
+                <p className="legalities">
                   {renderLegality(cardDetails.legalities)}
                 </p>
+                <div className='detail_pages_text'>Other</div>
                 <p className="box-style"><strong>Set Name: </strong>{cardDetails.set_name}</p>
               </div>
             </div>
@@ -151,9 +152,10 @@ function CardDetails() {
               <div className='detail_pages_text'>Information</div>
               {renderDetail(cardDetails)}
               <div className='detail_pages_text'>Legalities</div>
-              <p className="box-style">
+              <p className="legalities">
                 {renderLegality(cardDetails.legalities)}
               </p>
+              <div className='detail_pages_text'>Other</div>
               <p className="box-style">
                 <strong>Set Name: </strong>
                 {cardDetails.set_name}

@@ -132,7 +132,7 @@ app.get('/api/summarize-stream', async (req, res) => {
         },
         {
           role: 'user',
-          content: `Provide insights on the following Magic: The Gathering card details concisely (under 1000 characters):
+          content: `Provide insights on the following Magic: The Gathering card details concisely in korean(under 1000 characters):
 
 Name: ${name}
 Mana Cost: ${mana_cost}

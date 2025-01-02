@@ -79,6 +79,10 @@ function CardDetails() {
     return <div>Loading...</div>;
   }
 
+  const paragraphs = cardSummary
+    .split('\n\n') // 두 개의 줄바꿈을 기준으로 문단 나눔
+    .filter((paragraph) => paragraph.trim() !== '') // 빈 문단 제거
+    .map((paragraph, index) => <p key={index}>{paragraph.trim()}</p>); // 문단 렌더링
 
   const renderLegality = (legalities) => {
     return Object.entries(legalities)

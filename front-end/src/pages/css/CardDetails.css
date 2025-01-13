@@ -26,6 +26,10 @@
   gap: 10px;
 }
 
+.Card_Detail_Box .image-container a{
+  text-decoration: none;
+}
+
 .Card_Detail_Box img {
   width: 300px;
   height: auto;

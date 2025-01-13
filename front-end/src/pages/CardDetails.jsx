@@ -147,8 +147,18 @@ function CardDetails() {
               />
               <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
               {renderArt(cardDetails)}
-              <p className='Detail_Pages_Card_Number'><strong>CardKingdom: {cardKingdomPrice}</strong></p>
-              <p className='Detail_Pages_Card_Number'><strong>CardKingdom(Foil): {cardKingdomFoilPrice}</strong></p>
+              <a
+                href={`https://www.cardkingdom.com/catalog/search?search=header&filter%5Bname%5D=${encodeURIComponent(cardDetails.card_faces[0].name)}`}
+                target="_blank"
+                rel="noopener noreferrer">
+                <p className='Detail_Pages_Card_Number'><strong>CardKingdom: {cardKingdomPrice}</strong></p>
+              </a>
+              <a
+                href={`https://www.cardkingdom.com/catalog/search?filter%5Btab%5D=mtg_foil&filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=${encodeURIComponent(cardDetails.card_faces[0].name)}`}
+                target="_blank"
+                rel="noopener noreferrer">
+                <p className='Detail_Pages_Card_Number'><strong>CardKingdom(Foil): {cardKingdomFoilPrice}</strong></p>
+              </a>
             </div>
             <div className='Details_Text'>
               {/* card details */}
@@ -182,8 +192,18 @@ function CardDetails() {
               />
               <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
               {renderArt(cardDetails)}
-              <p className='Detail_Pages_Card_Number'><strong>CardKingdom: {cardKingdomPrice}</strong></p>
-              <p className='Detail_Pages_Card_Number'><strong>CardKingdom(Foil): {cardKingdomFoilPrice}</strong></p>
+              <a
+                href={`https://www.cardkingdom.com/catalog/search?search=header&filter%5Bname%5D=${encodeURIComponent(cardDetails.name)}`}
+                target="_blank"
+                rel="noopener noreferrer">
+                <p className='Detail_Pages_Card_Number'><strong>CardKingdom: {cardKingdomPrice}</strong></p>
+              </a>
+              <a
+                href={`https://www.cardkingdom.com/catalog/search?filter%5Btab%5D=mtg_foil&filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=${encodeURIComponent(cardDetails.name)}`}
+                target="_blank"
+                rel="noopener noreferrer">
+                <p className='Detail_Pages_Card_Number'><strong>CardKingdom(Foil): {cardKingdomFoilPrice}</strong></p>
+              </a>
             </div>
             <div className='Details_Text'>
               <div className='detail_pages_text'>Information</div>

@@ -132,15 +132,15 @@ app.get('/api/summarize-stream', async (req, res) => {
         },
         {
           role: 'user',
-          content: `Provide insights on the following Magic: The Gathering card details concisely in korean(under 1000 characters):
+          content: `Provide insights on the following Magic: The Gathering card details concisely in korean(under 1500 characters):
 
 Name: ${name}
 Mana Cost: ${mana_cost}
 Type Line: ${type_line}
 Oracle Text: ${oracle_text}
 
-1. What type of deck this card is commonly used in (e.g., aggro, control, combo).
-2. When or under what circumstances this card is typically played or most effective (e.g., early game, late game, in response to a specific strategy).
+What type of deck this card is commonly used in (e.g., aggro, control, combo).
+When or under what circumstances this card is typically played or most effective (e.g., early game, late game, in response to a specific strategy).
 `,
         },
       ],

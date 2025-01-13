@@ -58,6 +58,7 @@ function CardDetails() {
         )}&oracle_text=${encodeURIComponent(cardDetails.oracle_text)}`
       );
 
+      console.log(cardDetails.name, cardDetails.type_line, cardDetails.mana_cost, cardDetails.oracle_text);
       eventSource.onmessage = (event) => {
         if (event.data === '[DONE]') {
           eventSource.close(); // 스트리밍 종료

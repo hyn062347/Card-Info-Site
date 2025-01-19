@@ -6,7 +6,10 @@ const app = express();
 const PORT = 3001;
 const cors = require('cors');
 
-app.use(cors());
+app.use(cors({
+  origin: '*', // 모든 요청 허용
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // 허용할 HTTP 메서드
+}));
 app.use(express.json());
 
 // OpenAI API configuration

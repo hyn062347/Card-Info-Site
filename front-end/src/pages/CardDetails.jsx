@@ -64,9 +64,10 @@ function CardDetails() {
           eventSource.close(); // 스트리밍 종료
         } else {
           setCardSummary((prev) => (prev === 'Loading...' ? event.data : prev + event.data)); // 실시간 데이터 업데이트
+          
         }
       };
-
+      console.log(cardSummary);
       eventSource.onerror = (error) => {
         console.error('Error receiving stream:', error);
         eventSource.close(); // 에러 발생 시 스트리밍 종료
@@ -80,11 +81,6 @@ function CardDetails() {
     return <div>Loading...</div>;
   }
 
-  const paragraphs = cardSummary
-    .split('\n\n') // 두 개의 줄바꿈을 기준으로 문단 나눔
-    .filter((paragraph) => paragraph.trim() !== '') // 빈 문단 제거
-    .map((paragraph, index) => <p key={index}>{paragraph.trim()}</p>); // 문단 렌더링
-
   const renderLegality = (legalities) => {
     return Object.entries(legalities)
       .filter(([format, legality]) => legality !== "not_legal") // 필터링
@@ -93,6 +89,80 @@ function CardDetails() {
           <strong className="capitalize">{format}:</strong> {legality}
         </p>
       ));
+  };
+
+  const paragraphs = cardSummary
+  .split('\n\n') // 두 줄바꿈 기준으로 문단 나눔
+  .filter((paragraph) => paragraph.trim() !== '') // 빈 문단 제거
+  .map((paragraph, index) => <p key={index}>{paragraph.trim()}</p>);
+
+  const renderCommonInfo = (cardDetails) => {
+    return (
+      <>
+        <div className='detail_pages_text'>Legalities</div>
+        <p className="legalities">
+          {renderLegality(cardDetails.legalities)}
+        </p>
+        <div className='detail_pages_text'>Other</div>
+        <p className="box-style">
+          <strong>Set Name: </strong>
+          {cardDetails.set_name}
+        </p>
+        <p className="box-style">
+          {paragraphs}
+        </p>
+      </>
+    );
+  }
+
+  const renderCardKingdomPrice = (cardKingdomPrice, cardKingdomFoilPrice, cardDetails) => {
+    const cardName = cardDetails.card_faces ? cardDetails.card_faces[0].name : cardDetails.name;
+    return (
+      <>
+        <a
+          href={`https://www.cardkingdom.com/catalog/search?search=header&filter%5Bname%5D=${encodeURIComponent(cardName)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <p className='Detail_Pages_Card_Number'><strong>CardKingdom: {cardKingdomPrice}</strong></p>
+        </a>
+        <a
+          href={`https://www.cardkingdom.com/catalog/search?filter%5Btab%5D=mtg_foil&filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=${encodeURIComponent(cardName)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <p className='Detail_Pages_Card_Number'><strong>CardKingdom(Foil): {cardKingdomFoilPrice}</strong></p>
+        </a>
+      </>
+    );
+  };
+
+  const renderCardImages = (cardDetails) => {
+    if (cardDetails.card_faces) {
+      return (
+        <>
+          <img
+            src={cardDetails.card_faces[0].image_uris.normal}
+            alt="Card Front"
+          />
+          <img
+            src={cardDetails.card_faces[1].image_uris.normal}
+            alt="Card Back"
+          />
+        </>
+      );
+    }
+
+    if (cardDetails.image_uris) {
+      return (
+        <img
+          src={cardDetails.image_uris.normal}
+          alt="Card Front"
+        />
+      );
+    }
+
+    return <p>No images available</p>; // 이미지가 없을 경우 기본 메시지
   };
 
   const renderDetail = (cardFace) => {
@@ -123,11 +193,13 @@ function CardDetails() {
                 : "Normal";
 
     return (
-      <p className="Detail_Pages_Card_Number">
-        <strong>Art Type:</strong> {artType}
-      </p>
+      <>
+        <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
+        <p className="Detail_Pages_Card_Number">
+          <strong>Art Type:</strong> {artType}
+        </p>
+      </>
     );
-
   }
 
   return (
@@ -137,28 +209,9 @@ function CardDetails() {
         {cardDetails.card_faces ? (
           <div className='Flex_Row'>
             <div className='image-container'>
-              <img
-                src={cardDetails.card_faces[0].image_uris.normal}
-                alt="Card Front"
-              />
-              <img
-                src={cardDetails.card_faces[1].image_uris.normal}
-                alt="Card Back"
-              />
-              <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
+              {renderCardImages(cardDetails)}
               {renderArt(cardDetails)}
-              <a
-                href={`https://www.cardkingdom.com/catalog/search?search=header&filter%5Bname%5D=${encodeURIComponent(cardDetails.card_faces[0].name)}`}
-                target="_blank"
-                rel="noopener noreferrer">
-                <p className='Detail_Pages_Card_Number'><strong>CardKingdom: {cardKingdomPrice}</strong></p>
-              </a>
-              <a
-                href={`https://www.cardkingdom.com/catalog/search?filter%5Btab%5D=mtg_foil&filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=${encodeURIComponent(cardDetails.card_faces[0].name)}`}
-                target="_blank"
-                rel="noopener noreferrer">
-                <p className='Detail_Pages_Card_Number'><strong>CardKingdom(Foil): {cardKingdomFoilPrice}</strong></p>
-              </a>
+              {renderCardKingdomPrice(cardKingdomPrice, cardKingdomFoilPrice, cardDetails)}
             </div>
             <div className='Details_Text'>
               {/* card details */}
@@ -171,55 +224,22 @@ function CardDetails() {
                 {/* back */}
                 <div className='detail_pages_text'>Back</div>
                 {renderDetail(cardDetails.card_faces[1])}
-                <div className='detail_pages_text'>Legalities</div>
-                <p className="legalities">
-                  {renderLegality(cardDetails.legalities)}
-                </p>
-                <div className='detail_pages_text'>Other</div>
-                <p className="box-style"><strong>Set Name: </strong>{cardDetails.set_name}</p>
-                <p className="box-style">
-                  <ReactMarkdown>{cardSummary}</ReactMarkdown>
-                </p>
               </div>
+              {/* Details */}
+              {renderCommonInfo(cardDetails)}
             </div>
           </div>
         ) : (
           <div className='Flex_Row'>
             <div className='image-container'>
-              <img
-                src={cardDetails.image_uris.normal}
-                alt="Card Front"
-              />
-              <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
+              {renderCardImages(cardDetails)}
               {renderArt(cardDetails)}
-              <a
-                href={`https://www.cardkingdom.com/catalog/search?search=header&filter%5Bname%5D=${encodeURIComponent(cardDetails.name)}`}
-                target="_blank"
-                rel="noopener noreferrer">
-                <p className='Detail_Pages_Card_Number'><strong>CardKingdom: {cardKingdomPrice}</strong></p>
-              </a>
-              <a
-                href={`https://www.cardkingdom.com/catalog/search?filter%5Btab%5D=mtg_foil&filter%5Bsearch%5D=mtg_advanced&filter%5Bname%5D=${encodeURIComponent(cardDetails.name)}`}
-                target="_blank"
-                rel="noopener noreferrer">
-                <p className='Detail_Pages_Card_Number'><strong>CardKingdom(Foil): {cardKingdomFoilPrice}</strong></p>
-              </a>
+              {renderCardKingdomPrice(cardKingdomPrice, cardKingdomFoilPrice, cardDetails)}
             </div>
             <div className='Details_Text'>
               <div className='detail_pages_text'>Information</div>
               {renderDetail(cardDetails)}
-              <div className='detail_pages_text'>Legalities</div>
-              <p className="legalities">
-                {renderLegality(cardDetails.legalities)}
-              </p>
-              <div className='detail_pages_text'>Other</div>
-              <p className="box-style">
-                <strong>Set Name: </strong>
-                {cardDetails.set_name}
-              </p>
-              <p className="box-style">
-                <ReactMarkdown>{cardSummary}</ReactMarkdown>
-              </p>
+              {renderCommonInfo(cardDetails)}
             </div>
           </div>
         )}

@@ -16,6 +16,7 @@
   margin-left: 5%;
   margin-right: 5%;
   gap: 30px;
+  justify-content: center;
 }
 
 
@@ -44,6 +45,7 @@
 
 .Card_Detail_Box .Details_Text {
   flex: 7;
+  max-width: 1000px;
 }
 
 
@@ -68,7 +70,7 @@
   text-align: left;
   white-space: pre-line;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .legalities p{

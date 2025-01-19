@@ -4,6 +4,7 @@ import axios from 'axios';
 import Header from '../components/Header';
 import ReactMarkdown from 'react-markdown';
 import './css/CardDetails.css';
+import Markdown from 'react-markdown';
 
 function CardDetails() {
   const { cardId } = useParams();
@@ -63,7 +64,8 @@ function CardDetails() {
         if (event.data === '[DONE]') {
           eventSource.close(); // 스트리밍 종료
         } else {
-          setCardSummary((prev) => (prev === 'Loading...' ? event.data : prev + event.data)); // 실시간 데이터 업데이트
+          const fromattedData = event.data.replace(/<br>/g, '\n');
+          setCardSummary((prev) => (prev === 'Loading...' ? fromattedData : prev + fromattedData)); // 실시간 데이터 업데이트
           
         }
       };
@@ -91,11 +93,6 @@ function CardDetails() {
       ));
   };
 
-  const paragraphs = cardSummary
-  .split('\n\n') // 두 줄바꿈 기준으로 문단 나눔
-  .filter((paragraph) => paragraph.trim() !== '') // 빈 문단 제거
-  .map((paragraph, index) => <p key={index}>{paragraph.trim()}</p>);
-
   const renderCommonInfo = (cardDetails) => {
     return (
       <>
@@ -109,7 +106,7 @@ function CardDetails() {
           {cardDetails.set_name}
         </p>
         <p className="box-style">
-          {paragraphs}
+          <Markdown>{cardSummary}</Markdown>
         </p>
       </>
     );

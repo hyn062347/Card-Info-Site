@@ -150,8 +150,8 @@ When or under what circumstances this card is typically played or most effective
     for await (const part of response) {
       const content = part.choices[0]?.delta?.content || '';
       if (content) {
-        const formattedContent = content.replace(/\. /g, '.\n\n');
-        console.log('Streaming content:', JSON.stringify(content));
+        formattedContent = content.replace(/(\.\s*\n\n|\.\s*\n|\n\n|\n)/g, '<br>');
+        console.log('Streaming content:', JSON.stringify(formattedContent));
     res.write(`data: ${formattedContent}\n\n`); // 스트리밍 데이터 전송
       }
     }

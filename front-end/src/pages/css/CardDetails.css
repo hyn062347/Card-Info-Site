@@ -10,24 +10,54 @@
   justify-content: center;
 }
 
-.Flex_Row {
-  display: flex;
-  flex-direction: row;
-  margin-left: 5%;
-  margin-right: 5%;
-  gap: 30px;
-  justify-content: center;
+@media(min-width: 900px) {
+  .Flex_Row {
+    display: flex;
+    flex-direction: row;
+    margin-left: 5%;
+    margin-right: 5%;
+    gap: 30px;
+    justify-content: center;
+  }
+
+  .Card_Detail_Box .image-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
 }
 
+@media(max-width: 900px) {
+  .Flex_Row {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5%;
+    margin-right: 5%;
+    gap: 30px;
+    justify-content: center;
+  }
 
-.Card_Detail_Box .image-container {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  gap: 10px;
+  .Card_Detail_Box .image-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    align-items: center;
+  }
+
+  .Card_Detail_Box .image-container p{
+    width: -webkit-fill-available;
+  }
+
+  .Card_Detail_Box .image-container a{
+    width: -webkit-fill-available;
+  }
 }
 
-.Card_Detail_Box .image-container a{
+.Card_Detail_Box .image-container a {
   text-decoration: none;
 }
 
@@ -60,7 +90,7 @@
   white-space: pre-wrap;
 }
 
-.legalities{
+.legalities {
   background: linear-gradient(45deg, #009dff, #8000ff);
   border-radius: 10px;
   padding: 10px;
@@ -73,7 +103,7 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-.legalities p{
+.legalities p {
   margin: 2.5px;
 }
 
@@ -82,7 +112,7 @@
 
 }
 
-.box-style p .capitalize{
+.box-style p .capitalize {
   text-transform: capitalize;
 }
 

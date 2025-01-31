@@ -66,7 +66,7 @@ function CardDetails() {
         } else {
           const fromattedData = event.data.replace(/<br>/g, '\n');
           setCardSummary((prev) => (prev === 'Loading...' ? fromattedData : prev + fromattedData)); // 실시간 데이터 업데이트
-          
+
         }
       };
       console.log(cardSummary);
@@ -177,23 +177,37 @@ function CardDetails() {
 
     const artType = cardDetails.textless
       ? "Textless"
-      : cardDetails.full_art
-        ? "Full Art"
-        : cardDetails.border_color === "borderless"
-          ? "Borderless"
+      : cardDetails.border_color === "borderless"
+        ? "Borderless"
+        : cardDetails.full_art
+          ? "Full Art"
           : cardDetails.frame_effects?.includes("extendedart")
             ? "Extended Art"
             : cardDetails.frame_effects?.includes("showcase")
               ? "Showcase"
               : cardDetails.frame_effects?.includes("etched")
                 ? "Etched"
-                : "Normal";
+                : cardDetails.frame === "future"
+                  ? "Future"
+                  : cardDetails.frame === "1997"
+                    ? "Retro"
+                    : "Normal";
 
+    const promoType = cardDetails.promo_types?.includes("bundle")
+      ? "Bundle"
+      : cardDetails.promo_types?.includes("prerelease")
+        ? "Prerelease"
+        : cardDetails.promo_types?.includes("serialized")
+          ? "Serialized"
+          : "Normal";
     return (
       <>
         <p className='Detail_Pages_Card_Number'><strong>Collector Number: {cardDetails.collector_number}</strong></p>
         <p className="Detail_Pages_Card_Number">
           <strong>Art Type:</strong> {artType}
+        </p>
+        <p className="Detail_Pages_Card_Number">
+          <strong>Promo Type:</strong> {promoType}
         </p>
       </>
     );

@@ -65,7 +65,7 @@ What type of deck this card is commonly used in (e.g., aggro, control, combo).
 When or under what circumstances this card is typically played or most effective (e.g., early game, late game, in response to a specific strategy).`,
         },
       ],
-      stream: false,
+      stream: true,
     });
 
     console.log("🔄 OpenAI 응답 스트리밍 시작..."); // ✅ 스트리밍 시작 확인

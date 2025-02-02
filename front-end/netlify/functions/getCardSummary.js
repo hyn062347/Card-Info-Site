@@ -4,6 +4,10 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'GET') {
     return {
       statusCode: 405,
+      headers: {
+        'Access-Control-Allow-Origin': '*',  // ✅ CORS 설정 추가
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      },
       body: JSON.stringify({ error: 'Method Not Allowed' }),
     };
   }
@@ -13,6 +17,9 @@ exports.handler = async (event) => {
   if (!name || !type_line || !oracle_text) {
     return {
       statusCode: 400,
+      headers: {
+        'Access-Control-Allow-Origin': '*',  // ✅ CORS 설정 추가
+      },
       body: JSON.stringify({ error: 'All card details are required.' }),
     };
   }
@@ -25,6 +32,9 @@ exports.handler = async (event) => {
     if (!process.env.OPENAI_API_KEY) {
       return {
         statusCode: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',  // ✅ CORS 설정 추가
+        },
         body: JSON.stringify({ error: 'Missing OpenAI API key in environment variables.' }),
       };
     }
@@ -75,6 +85,8 @@ When or under what circumstances this card is typically played or most effective
 
     return new Response(stream, {
       headers: {
+        'Access-Control-Allow-Origin': '*',  // ✅ CORS 설정 추가
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
@@ -84,6 +96,9 @@ When or under what circumstances this card is typically played or most effective
     console.error('Error calling OpenAI API:', error);
     return {
       statusCode: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',  // ✅ CORS 설정 추가
+      },
       body: JSON.stringify({ error: 'Failed to summarize card details.' }),
     };
   }

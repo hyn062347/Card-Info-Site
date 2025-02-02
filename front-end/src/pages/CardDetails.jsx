@@ -52,6 +52,7 @@ function CardDetails() {
 
   useEffect(() => {
     if (cardDetails) {
+      console.log("📡 카드 요약 요청:", cardDetails);
       const eventSource = new EventSource(
         `${API_BASE_URL}/getCardSummary?name=${encodeURIComponent(
           cardDetails.name
@@ -62,6 +63,7 @@ function CardDetails() {
 
       console.log(cardDetails.name, cardDetails.type_line, cardDetails.mana_cost, cardDetails.oracle_text);
       eventSource.onmessage = (event) => {
+        console.log("📡 OpenAI 응답 수신:", event.data);
         if (event.data === '[DONE]') {
           eventSource.close(); // 스트리밍 종료
         } else {
@@ -72,6 +74,7 @@ function CardDetails() {
       };
       console.log(cardSummary);
       eventSource.onerror = (error) => {
+        console.error("❌ OpenAI 스트리밍 오류 (프론트엔드):", error);
         console.error('Error receiving stream:', error);
         eventSource.close(); // 에러 발생 시 스트리밍 종료
       };

@@ -13,7 +13,7 @@ function CardDetails() {
   const [cardSummary, setCardSummary] = useState('Loading...');
 
   // Netlify Functions API Base URL 설정
-  const API_BASE_URL = '/.netlify/functions';
+  const API_BASE_URL = '/api';
 
   useEffect(() => {
     const fetchCardDetails = async () => {

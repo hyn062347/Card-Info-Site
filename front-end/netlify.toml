@@ -4,17 +4,16 @@
   to = "/index.html"
   status = 200
 
-# ✅ 일반 서버리스 함수 설정 (Netlify Functions)
+# ✅ Netlify 일반 Functions 설정 (서버리스 함수)
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild" # 최신 ESBuild 사용
 
-# ✅ Edge Functions 설정
-[[edge_functions]]
-  path = "/api/getCardSummary"  # ✅ URL 경로 수정
-  function = "getCardSummary"
+# ✅ 개별 함수 설정 (각 서버리스 함수에 대한 설정)
+[functions.getCardKingdomPrice]
+  path = "/api/getCardKingdomPrice"
 
-# ✅ 일반 서버리스 함수 개별 설정 (Netlify Functions)
-[[functions]]
-  name = "getCardKingdomPrice"
-  path = "/api/getCardKingdomPrice"  # ✅ URL 경로 수정
+# ✅ Edge Functions 설정 (스트리밍을 위한 Edge 환경)
+[[edge_functions]]
+  path = "/api/getCardSummary"
+  function = "getCardSummary"

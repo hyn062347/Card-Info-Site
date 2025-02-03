@@ -41,7 +41,7 @@ When or under what circumstances this card is typically played or most effective
   };
 
   // 환경 변수에서 OpenAI API 키 가져오기
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = context.env.OPENAI_API_KEY;
   if (!apiKey) {
     return new Response(
       JSON.stringify({ error: "OpenAI API 키가 설정되어 있지 않습니다." }),

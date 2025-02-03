@@ -1,57 +1,31 @@
-import { OpenAI } from 'openai';
+// netlify/edge-functions/summarize-stream.js
 
-export default async (request) => {
-  console.log("🔍 API 요청 수신:", request.method, request.url); // ✅ API 요청 확인
-
-  if (request.method !== 'GET') {
-    return new Response(JSON.stringify({ error: 'Method Not Allowed' }), {
-      status: 405,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      },
-    });
-  }
-
-  const url = new URL(request.url);
-  const name = url.searchParams.get("name");
-  const mana_cost = url.searchParams.get("mana_cost");
-  const type_line = url.searchParams.get("type_line");
-  const oracle_text = url.searchParams.get("oracle_text");
+export default async (request, context) => {
+  // URLSearchParams를 통해 쿼리 파라미터 읽기
+  const { searchParams } = new URL(request.url);
+  const name = searchParams.get("name");
+  const mana_cost = searchParams.get("mana_cost");
+  const type_line = searchParams.get("type_line");
+  const oracle_text = searchParams.get("oracle_text");
 
   if (!name || !type_line || !oracle_text) {
-    console.log("⚠️ 필수 파라미터 누락:", { name, mana_cost, type_line, oracle_text }); // ✅ 파라미터 확인
-    return new Response(JSON.stringify({ error: 'All card details are required.' }), {
-      status: 400,
-      headers: { "Access-Control-Allow-Origin": "*" },
-    });
+    return new Response(
+      JSON.stringify({ error: "모든 카드 정보를 제공해야 합니다." }),
+      { status: 400, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+    );
   }
 
-  try {
-    console.log("📡 OpenAI API 요청:", { name, mana_cost, type_line, oracle_text }); // ✅ OpenAI API 요청 정보
-
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("❌ OpenAI API Key 누락");
-      return new Response(JSON.stringify({ error: 'Missing OpenAI API key in environment variables.' }), {
-        status: 500,
-        headers: { "Access-Control-Allow-Origin": "*" },
-      });
-    }
-
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are an assistant specialized in Magic: The Gathering cards.',
-        },
-        {
-          role: 'user',
-          content: `Provide insights on the following Magic: The Gathering card details concisely in Korean (under 1500 characters):
+  // OpenAI API 호출에 사용할 payload 구성
+  const payload = {
+    model: "gpt-4o", // 사용하고자 하는 모델명 (환경에 맞게 수정하세요)
+    messages: [
+      {
+        role: "system",
+        content: "You are an assistant specialized in Magic: The Gathering cards.",
+      },
+      {
+        role: "user",
+        content: `Provide insights on the following Magic: The Gathering card details concisely in korean(under 1500 characters):
 
 Name: ${name}
 Mana Cost: ${mana_cost}
@@ -59,51 +33,96 @@ Type Line: ${type_line}
 Oracle Text: ${oracle_text}
 
 What type of deck this card is commonly used in (e.g., aggro, control, combo).
-When or under what circumstances this card is typically played or most effective (e.g., early game, late game, in response to a specific strategy).`,
-        },
-      ],
-      stream: true,
-    });
+When or under what circumstances this card is typically played or most effective (e.g., early game, late game, in response to a specific strategy).
+`,
+      },
+    ],
+    stream: true,
+  };
 
-    console.log("🔄 OpenAI 응답 스트리밍 시작..."); // ✅ 스트리밍 시작 확인
+  // 환경 변수에서 OpenAI API 키 가져오기
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return new Response(
+      JSON.stringify({ error: "OpenAI API 키가 설정되어 있지 않습니다." }),
+      { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+    );
+  }
 
-    const encoder = new TextEncoder();
-    const stream = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const part of response) {
-            const content = part.choices[0]?.delta?.content || '';
-            if (content) {
-              console.log("📡 OpenAI 응답:", content); // ✅ OpenAI 응답 내용
-              const formattedContent = content.replace(/(\.\s*\n\n|\.\s*\n|\n\n|\n)/g, '<br>');
-              controller.enqueue(encoder.encode(`data: ${formattedContent}\n\n`));
+  // OpenAI API에 POST 요청 보내기
+  const apiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!apiResponse.ok || !apiResponse.body) {
+    const errText = await apiResponse.text();
+    return new Response(
+      JSON.stringify({ error: "카드 정보를 요약하는데 실패했습니다.", details: errText }),
+      { status: 500, headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
+    );
+  }
+
+  const encoder = new TextEncoder();
+
+  // ReadableStream을 생성하여 OpenAI API의 스트리밍 응답을 파싱 후 이벤트 스트림 형식으로 변환
+  const stream = new ReadableStream({
+    async start(controller) {
+      const reader = apiResponse.body.getReader();
+      const decoder = new TextDecoder();
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          // 받아온 chunk를 문자열로 디코딩
+          const chunk = decoder.decode(value, { stream: true });
+          // OpenAI API 스트림은 SSE 형식(data: ... )이므로 줄 단위로 분리
+          const lines = chunk.split("\n").filter((line) => line.trim() !== "");
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              const dataStr = line.slice("data: ".length).trim();
+              if (dataStr === "[DONE]") {
+                // 스트림 종료를 알림
+                controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+                controller.close();
+                return;
+              }
+              try {
+                const parsed = JSON.parse(dataStr);
+                const content = parsed.choices?.[0]?.delta?.content;
+                if (content) {
+                  // 내용 내의 개행 문자 등을 <br> 태그로 치환 (원하는 포맷에 맞게 수정)
+                  const formattedContent = content.replace(/(\.\s*\n\n|\.\s*\n|\n\n|\n)/g, "<br>");
+                  controller.enqueue(encoder.encode(`data: ${formattedContent}\n\n`));
+                }
+              } catch (err) {
+                // JSON 파싱 실패 시 무시
+                console.error("JSON 파싱 에러:", err);
+              }
             }
           }
-          controller.enqueue(encoder.encode('data: [DONE]\n\n'));
-          console.log("✅ OpenAI 응답 완료");
-          controller.close();
-        } catch (error) {
-          console.error("❌ OpenAI 스트리밍 오류:", error);
-          controller.enqueue(encoder.encode('data: [ERROR]\n\n'));
-          controller.close();
         }
-      },
-    });
+      } catch (err) {
+        console.error("스트림 처리 중 에러:", err);
+        controller.error(err);
+      }
+      controller.close();
+    },
+  });
 
-    return new Response(stream, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive',
-      },
-    });
-  } catch (error) {
-    console.error("❌ OpenAI API 오류:", error); // ✅ API 호출 중 에러 확인
-    return new Response(JSON.stringify({ error: 'Failed to summarize card details.' }), {
-      status: 500,
-      headers: { "Access-Control-Allow-Origin": "*" },
-    });
-  }
+  // Netlify Edge Functions의 Response 객체에 필요한 헤더(CORS, event-stream 등)를 추가
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
 };

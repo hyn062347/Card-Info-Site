@@ -1,30 +1,30 @@
-const OpenAI = require('openai');
+import { OpenAI } from 'openai';
 
-exports.handler = async (event) => {
-  console.log("🔍 API 요청 수신:", event.httpMethod, event.queryStringParameters); // ✅ API 요청 확인
+export default async (request) => {
+  console.log("🔍 API 요청 수신:", request.method, request.url); // ✅ API 요청 확인
 
-  if (event.httpMethod !== 'GET') {
-    return {
-      statusCode: 405,
+  if (request.method !== 'GET') {
+    return new Response(JSON.stringify({ error: 'Method Not Allowed' }), {
+      status: 405,
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
       },
-      body: JSON.stringify({ error: 'Method Not Allowed' }),
-    };
+    });
   }
 
-  const { name, mana_cost, type_line, oracle_text } = event.queryStringParameters;
+  const url = new URL(request.url);
+  const name = url.searchParams.get("name");
+  const mana_cost = url.searchParams.get("mana_cost");
+  const type_line = url.searchParams.get("type_line");
+  const oracle_text = url.searchParams.get("oracle_text");
 
   if (!name || !type_line || !oracle_text) {
     console.log("⚠️ 필수 파라미터 누락:", { name, mana_cost, type_line, oracle_text }); // ✅ 파라미터 확인
-    return {
-      statusCode: 400,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({ error: 'All card details are required.' }),
-    };
+    return new Response(JSON.stringify({ error: 'All card details are required.' }), {
+      status: 400,
+      headers: { "Access-Control-Allow-Origin": "*" },
+    });
   }
 
   try {
@@ -36,13 +36,10 @@ exports.handler = async (event) => {
 
     if (!process.env.OPENAI_API_KEY) {
       console.error("❌ OpenAI API Key 누락");
-      return {
-        statusCode: 500,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
-        body: JSON.stringify({ error: 'Missing OpenAI API key in environment variables.' }),
-      };
+      return new Response(JSON.stringify({ error: 'Missing OpenAI API key in environment variables.' }), {
+        status: 500,
+        headers: { "Access-Control-Allow-Origin": "*" },
+      });
     }
 
     const response = await openai.chat.completions.create({
@@ -104,12 +101,9 @@ When or under what circumstances this card is typically played or most effective
     });
   } catch (error) {
     console.error("❌ OpenAI API 오류:", error); // ✅ API 호출 중 에러 확인
-    return {
-      statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({ error: 'Failed to summarize card details.' }),
-    };
+    return new Response(JSON.stringify({ error: 'Failed to summarize card details.' }), {
+      status: 500,
+      headers: { "Access-Control-Allow-Origin": "*" },
+    });
   }
 };

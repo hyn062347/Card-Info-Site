@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header';
-import ReactMarkdown from 'react-markdown';
-import './css/CardDetails.css';
 import Markdown from 'react-markdown';
+import './css/CardDetails.css';
 
 function CardDetails() {
   const { cardId } = useParams();
@@ -12,7 +11,10 @@ function CardDetails() {
   const [cardKingdomPrice, setCardKingdomPrice] = useState('Loading...');
   const [cardKingdomFoilPrice, setCardKingdomFoilPrice] = useState('Loading...');
   const [cardSummary, setCardSummary] = useState('Loading...');
-  const API_BASE_URL = 'http://localhost:3001';
+
+  // Netlify Functions API Base URL 설정
+  const API_BASE_URL = '/api';
+  const SERVERLESS_FNC_URL = '/.netlify/functions';
 
   useEffect(() => {
     const fetchCardDetails = async () => {
@@ -35,7 +37,7 @@ function CardDetails() {
             ? cardName.split('//')[0].trim()
             : cardName;
           const modifiedCollectorNumber = collectorNumber.replace(/\D/g, ''); // \D는 숫자가 아닌 문자 제거
-          const response = await axios.get(`${API_BASE_URL}/api/price`, {
+          const response = await axios.get(`${SERVERLESS_FNC_URL}/getCardKingdomPrice`, {
             params: { cardName: simplifiedCardName, collectorNumber: modifiedCollectorNumber },
           });
           setCardKingdomPrice(response.data.nonFoilPrice);
@@ -51,16 +53,18 @@ function CardDetails() {
 
   useEffect(() => {
     if (cardDetails) {
+      // console.log("📡 카드 요약 요청:", cardDetails);
       const eventSource = new EventSource(
-        `${API_BASE_URL}/api/summarize-stream?name=${encodeURIComponent(
+        `${API_BASE_URL}/getCardSummary?name=${encodeURIComponent(
           cardDetails.name
         )}&mana_cost=${encodeURIComponent(cardDetails.mana_cost)}&type_line=${encodeURIComponent(
           cardDetails.type_line
         )}&oracle_text=${encodeURIComponent(cardDetails.oracle_text)}`
       );
 
-      console.log(cardDetails.name, cardDetails.type_line, cardDetails.mana_cost, cardDetails.oracle_text);
+      // console.log(cardDetails.name, cardDetails.type_line, cardDetails.mana_cost, cardDetails.oracle_text);
       eventSource.onmessage = (event) => {
+        // console.log("📡 OpenAI 응답 수신:", event.data);
         if (event.data === '[DONE]') {
           eventSource.close(); // 스트리밍 종료
         } else {
@@ -69,8 +73,9 @@ function CardDetails() {
 
         }
       };
-      console.log(cardSummary);
+      // console.log(cardSummary);
       eventSource.onerror = (error) => {
+        console.error("❌ OpenAI 스트리밍 오류 (프론트엔드):", error);
         console.error('Error receiving stream:', error);
         eventSource.close(); // 에러 발생 시 스트리밍 종료
       };

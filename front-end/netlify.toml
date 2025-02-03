@@ -3,9 +3,10 @@ from = "/*"
 to = "/index.html"
 status = 200
 
-[functions]
-  node_bundler = "esbuild"
+[[functions]]
+  path = "/.netlify/functions/getCardKingdomPrice"
+  function = "getCardKingdomPrice"
 
-[edge_functions]
+[[edge_functions]]
   path = "/.netlify/edge-functions/getCardSummary"
   function = "getCardSummary"

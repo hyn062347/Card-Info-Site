@@ -18,7 +18,7 @@ function Home() {
     <div className='home_page'>
       <div>
         <img src={logoImage} alt="logo" className='home_page_logo'/>
-        <h1>Foils</h1>
+        <h1>WuffleFoils</h1>
         <button 
           onClick={() => navigate('/search')}
           className='home_page_search_button'

@@ -1,4 +1,4 @@
-// netlify/edge-functions/summarize-stream.js
+import OpenAI from "https://esm.sh/openai@4.33.0";
 
 export default async (request, context) => {
   // URLSearchParams를 통해 쿼리 파라미터 읽기
@@ -41,7 +41,7 @@ When or under what circumstances this card is typically played or most effective
   };
 
   // 환경 변수에서 OpenAI API 키 가져오기
-  const apiKey = context.env.OPENAI_API_KEY;
+  const apiKey = Netlify.env.get("OPENAI_API_KEY");
   if (!apiKey) {
     return new Response(
       JSON.stringify({ error: "OpenAI API 키가 설정되어 있지 않습니다." }),

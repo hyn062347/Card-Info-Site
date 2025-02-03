@@ -9,10 +9,6 @@
   directory = "netlify/functions"
   node_bundler = "esbuild" # 최신 ESBuild 사용
 
-# ✅ 개별 함수 설정 (각 서버리스 함수에 대한 설정)
-[functions.getCardKingdomPrice]
-  path = "/api/getCardKingdomPrice"
-
 # ✅ Edge Functions 설정 (스트리밍을 위한 Edge 환경)
 [[edge_functions]]
   path = "/api/getCardSummary"

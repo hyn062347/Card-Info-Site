@@ -14,6 +14,7 @@ function CardDetails() {
 
   // Netlify Functions API Base URL 설정
   const API_BASE_URL = '/api';
+  const SERVERLESS_FNC_URL = '/.netlify/functions';
 
   useEffect(() => {
     const fetchCardDetails = async () => {
@@ -36,7 +37,7 @@ function CardDetails() {
             ? cardName.split('//')[0].trim()
             : cardName;
           const modifiedCollectorNumber = collectorNumber.replace(/\D/g, ''); // \D는 숫자가 아닌 문자 제거
-          const response = await axios.get(`${API_BASE_URL}/getCardKingdomPrice`, {
+          const response = await axios.get(`${SERVERLESS_FNC_URL}/getCardKingdomPrice`, {
             params: { cardName: simplifiedCardName, collectorNumber: modifiedCollectorNumber },
           });
           setCardKingdomPrice(response.data.nonFoilPrice);
@@ -52,7 +53,7 @@ function CardDetails() {
 
   useEffect(() => {
     if (cardDetails) {
-      console.log("📡 카드 요약 요청:", cardDetails);
+      // console.log("📡 카드 요약 요청:", cardDetails);
       const eventSource = new EventSource(
         `${API_BASE_URL}/getCardSummary?name=${encodeURIComponent(
           cardDetails.name
@@ -61,9 +62,9 @@ function CardDetails() {
         )}&oracle_text=${encodeURIComponent(cardDetails.oracle_text)}`
       );
 
-      console.log(cardDetails.name, cardDetails.type_line, cardDetails.mana_cost, cardDetails.oracle_text);
+      // console.log(cardDetails.name, cardDetails.type_line, cardDetails.mana_cost, cardDetails.oracle_text);
       eventSource.onmessage = (event) => {
-        console.log("📡 OpenAI 응답 수신:", event.data);
+        // console.log("📡 OpenAI 응답 수신:", event.data);
         if (event.data === '[DONE]') {
           eventSource.close(); // 스트리밍 종료
         } else {
@@ -72,7 +73,7 @@ function CardDetails() {
 
         }
       };
-      console.log(cardSummary);
+      // console.log(cardSummary);
       eventSource.onerror = (error) => {
         console.error("❌ OpenAI 스트리밍 오류 (프론트엔드):", error);
         console.error('Error receiving stream:', error);

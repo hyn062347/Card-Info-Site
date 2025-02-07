@@ -12,20 +12,22 @@
 
 ## 소개
 이 사이트는 Scryfall API를 이용하여 TCG게임 매직 더 개더링의 원하는 모든 카드 버전을 쉽게 검색하고 가격과 상세정보를 쉽게 확인하기 위해 개발했습니다.
+2024년 12월 추가 - 반응형 웹을 지원합니다.
+2025 1월 추가 - ChatGPT API를 활용하여 카드의 요약을 제공합니다.
 
 ## 프로젝트 구조도
 <img width="755" alt="스크린샷 2024-12-10 22 43 29" src="https://github.com/user-attachments/assets/2b908235-e679-4e18-a5b5-7698f0119b5f">
 
 ## 배포
-netlify 테스트 배포중
+Netlify 배포중
 
 ## 개발환경
 `MacOS 15.1`
-
+`VSCode`
 
 ## 기능
-React Autosuggest를 활용하여 검색어를 입력하면 자동완성이 되며, 검색을 수행하면 Scryfall.com의 API를 받아와 화면에 보여줍니다.
-카드를 검색해서 들어가게되면 Puppeteer를 활용하여 Cardkingdom사이트에서 같은 카드의 가격을 찾아옵니다.
+React Autosuggest를 활용하여 검색어를 입력하면 자동완성이 되며, 검색을 수행하면 Scryfall.com의 API를 받아와 모든 카드의 버전을 화면에 보여줍니다.
+카드를 선택해서 페이지를 이동하면 Puppeteer를 활용하여 Cardkingdom사이트에서 같은 카드의 가격을 찾아오고, Chat GPT API를 사용하여 해당 카드의 요약을 제공합니다.
 
 ## 프로젝트 의존성
 1. 프로젝트를 클론합니다.

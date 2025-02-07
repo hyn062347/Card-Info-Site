@@ -16,7 +16,11 @@
 2025 1월 추가 - ChatGPT API를 활용하여 카드의 요약을 제공합니다.
 
 ## 프로젝트 구조도
-<img width="755" alt="스크린샷 2024-12-10 22 43 29" src="https://github.com/user-attachments/assets/2b908235-e679-4e18-a5b5-7698f0119b5f">
+![로컬서버](images/Foils - local server.png)
+
+
+(images/Foils - serverless.png)
+Netlify Serverless 구조
 
 ## 배포
 Netlify 배포중

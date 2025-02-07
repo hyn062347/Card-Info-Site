@@ -16,10 +16,12 @@
 2025 1월 추가 - ChatGPT API를 활용하여 카드의 요약을 제공합니다.
 
 ## 프로젝트 구조도
-![로컬서버](images/Foils - local server.png)
+![Image](https://github.com/user-attachments/assets/e3ec8b84-e001-4bba-9b5e-c5e01505f306)
 
+로컬서버
 
-(images/Foils - serverless.png)
+![Image](https://github.com/user-attachments/assets/79b56159-f3a1-4a2f-b7ca-c9277a1b0a7f)
+
 Netlify Serverless 구조
 
 ## 배포
@@ -110,7 +112,8 @@ node server.js
 <img width="2030" alt="스크린샷 2024-12-09 19 36 38" src="https://github.com/user-attachments/assets/101038cd-6d53-462a-8457-359bf88d0d57">
 카드 선택 후 카드 버전 선택화면
 
-<img width="1067" alt="스크린샷 2024-12-09 19 53 27" src="https://github.com/user-attachments/assets/054e368f-bbc6-46d6-a4fc-11b86fb96089">
+<img width="798" alt="Image" src="https://github.com/user-attachments/assets/81f1a493-8b29-4762-8ab0-60ca04ef5170">
+
 카드 디테일 화면
 
 <img width="1067" alt="스크린샷 2024-12-09 19 58 12" src="https://github.com/user-attachments/assets/f943721e-408b-46a6-8acf-0c2b60553785">

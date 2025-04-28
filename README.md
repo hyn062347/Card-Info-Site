@@ -3,17 +3,21 @@
 
 ## 목차
 1. 소개
-2. 프로젝트 구조도
-3. 개발환경
-4. 기능
-5. 프로젝트 의존성
-6. 프로젝트 실행
-7. 쇼케이스
+2. 링크
+3. 프로젝트 구조도
+4. 개발환경
+5. 기능
+6. 프로젝트 의존성
+7. 프로젝트 실행
+8. 쇼케이스
 
 ## 소개
 이 사이트는 Scryfall API를 이용하여 TCG게임 매직 더 개더링의 원하는 모든 카드 버전을 쉽게 검색하고 가격과 상세정보를 쉽게 확인하기 위해 개발했습니다.
 2024년 12월 추가 - 반응형 웹을 지원합니다.
 2025 1월 추가 - ChatGPT API를 활용하여 카드의 요약을 제공합니다.
+
+## 링크
+https://wufflefoils.netlify.app/
 
 ## 프로젝트 구조도
 ![Image](https://github.com/user-attachments/assets/e3ec8b84-e001-4bba-9b5e-c5e01505f306)
@@ -24,12 +28,8 @@
 
 Netlify Serverless 구조
 
-## 배포
-Netlify 배포중
-
-## 개발환경
-`MacOS 15.1`
-`VSCode`
+## 개발툴
+`VSCode` `React` `NodeJS` `ChatGPT API` `Scryfall API` `Netlify`
 
 ## 기능
 React Autosuggest를 활용하여 검색어를 입력하면 자동완성이 되며, 검색을 수행하면 Scryfall.com의 API를 받아와 모든 카드의 버전을 화면에 보여줍니다.

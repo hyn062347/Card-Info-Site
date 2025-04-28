@@ -19,6 +19,8 @@
 ## 링크
 https://wufflefoils.netlify.app/
 
+※ 영어검색만 지원합니다.
+
 ## 프로젝트 구조도
 ![Image](https://github.com/user-attachments/assets/e3ec8b84-e001-4bba-9b5e-c5e01505f306)
 

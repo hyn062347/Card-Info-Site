@@ -8,7 +8,7 @@
     justify-content: center;
     align-items: center;
     margin: 15px 15px;
-    gap: 30px;
+    gap: 10px;
     height: 40px;
 }
 
@@ -44,6 +44,70 @@
 .header-logo:hover {
     transform: scale(1.1);
     transition: 0.2s;
+}
+
+@media (max-width: 600px) {
+    .header-bar {
+        background-color: white;
+        border: none;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: row;
+        padding: 5px 5px;
+        align-items: center;
+        margin: 10px 7px;
+        gap: 10px;
+        height: 40px;
+    }
+
+    /* Auto Suggest CSS */
+
+    .header-bar .react-autosuggest__container {
+        flex: 1;
+    }
+
+    .header-bar .react-autosuggest__input {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+        outline: none;
+        font-size: large;
+        caret-color: #0044ff;
+        text-align: center;
+        color: #0044ff;
+        padding: 10px 15px;
+        width: calc(100% - 30px);
+    }
+
+    .header-bar .react-autosuggest__suggestions-list {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 0px;
+        margin: 0px 0px;
+        z-index: 1000;
+        background-color: white;
+        box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 13px;
+    }
+
+    .header-bar .react-autosuggest__suggestion {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        cursor: pointer;
+        border: none;
+        border-radius: 15px;
+        background: linear-gradient(45deg, #009dff, #8000ff);
+        color: rgb(255, 255, 255);
+        transition: all 0.2s ease;
+    }
 }
 
 /* Auto Suggest CSS */
@@ -102,7 +166,7 @@
     transition: all 0.2s ease;
 }
 
-.header-bar .react-autosuggest__suggestion--highlighted{
+.header-bar .react-autosuggest__suggestion--highlighted {
     transform: scale(1.02);
 }
 

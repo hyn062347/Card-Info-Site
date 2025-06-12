@@ -67,9 +67,6 @@ function Header() {
           onKeyPress: handleKeyPress
         }}
       />
-      <button
-        className='header-bar-button'
-        onClick={handleSearch}>Search</button>
     </div>
   );
 }

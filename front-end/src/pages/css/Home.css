@@ -10,7 +10,8 @@
 }
 
 .home_page_logo {
-  width: 300px;
+  width: 50%;
+  max-width: 300px;
   z-index: 10;
 }
 
@@ -58,6 +59,7 @@
 
 .floating_card {
   width: 15%;
+  min-width: 200px;
   max-width: 270px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
@@ -71,4 +73,19 @@
 
 .floating_card:hover {
   transform: translateY(-20%);  
+}
+
+@media (max-width: 600px){
+  .floating_cards_container {
+    flex-wrap: wrap;
+    /* bottom: -18%;           더 깊숙이 숨겨야 화면 안 끊김 */
+    width: 200%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .floating_card {
+    width: 100px;
+    margin: -120px 0px;        /* 카드 폭이 줄면 겹침폭도 축소 */
+  }
 }

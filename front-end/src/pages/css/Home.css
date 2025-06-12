@@ -5,6 +5,8 @@
   flex-wrap: wrap;
   color: white;
   text-align: center;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .home_page_logo {
@@ -43,23 +45,24 @@
 /*Floating Card Part*/
 
 .floating_cards_container {
-  position: absolute;
+  position: fixed;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   z-index: 1;
-  top: 80%;
+  bottom: -8%;
 }
 
 .floating_card {
-  width: 200px;
+  width: 15%;
+  max-width: 270px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.5s ease;
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;
@@ -67,5 +70,5 @@
 }
 
 .floating_card:hover {
-  transform: scale(1.1);
+  transform: translateY(-20%);  
 }

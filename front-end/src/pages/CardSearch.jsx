@@ -103,7 +103,7 @@ function CardSearch() {
 
   return (
     <div className="search_page_main">
-      <div>
+      <div className='upper_container'>
         <div>
           <img
             className="search_page_logo"

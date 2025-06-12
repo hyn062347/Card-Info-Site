@@ -2,15 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataContext } from '../context/Datacontext';
 import axios from 'axios';
-import Autosuggest from 'react-autosuggest';
-import logoImage from '../images/logo.png';
 import './css/CardSearch.css';
+import Header from '../components/Header';
 
 function CardSearch() {
   const { globalSearchTerm, setGlobalSearchTerm } = useContext(DataContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [cardImages, setCardImages] = useState([]);
-  const [suggestions, setSuggestions] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -25,28 +23,9 @@ function CardSearch() {
     }
   }, [globalSearchTerm]);
 
-  // 검색어 자동 완성 요청
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      if (searchTerm.length > 2) {
-        try {
-          const response = await axios.get(
-            `https://api.scryfall.com/cards/autocomplete?q=${searchTerm}`
-          );
-          setSuggestions(response.data.data);
-        } catch (error) {
-          console.error('Error fetching autocomplete suggestions', error);
-        }
-      } else {
-        setSuggestions([]);
-      }
-    };
-
-    fetchSuggestions();
-  }, [searchTerm]);
-
   // 카드 검색 기능
   const handleSearch = async (term = searchTerm) => {
+    console.log("Search");
     try {
       if (term.length > 2) {
         const response = await axios.get(
@@ -86,57 +65,10 @@ function CardSearch() {
     }
   };
 
-  // Autosuggest 입력 변경 처리
-  const handleChange = (event, { newValue }) => {
-    setSearchTerm(newValue);
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  const getSuggestionValue = (suggestion) => suggestion;
-
-  const renderSuggestion = (suggestion) => <div>{suggestion}</div>;
 
   return (
     <div className="search_page_main">
-      <div className='upper_container'>
-        <div>
-          <img
-            className="search_page_logo"
-            src={logoImage}
-            alt="logo"
-            onClick={() => navigate(`/`)}
-          />
-        </div>
-        <h1>Card Search</h1>
-        <div className="search_page_search_container">
-          <Autosuggest
-            suggestions={suggestions}
-            onSuggestionsFetchRequested={({ value }) => setSearchTerm(value)}
-            onSuggestionsClearRequested={() => setSuggestions([])}
-            getSuggestionValue={getSuggestionValue}
-            renderSuggestion={renderSuggestion}
-            inputProps={{
-              placeholder: 'Search for a card',
-              value: searchTerm,
-              onChange: handleChange,
-              onKeyPress: handleKeyPress,
-            }}
-          />
-        </div>
-        <div>
-          <button
-            className="search_page_search_button"
-            onClick={() => handleSearch()}>
-            Search
-          </button>
-          {error && <p>{error}</p>}
-        </div>
-      </div>
+      <Header/>
       <div className="search_page_cards_container">
         {cardImages.map((card, index) => (
           <div className="search_page_card_box" key={index}>

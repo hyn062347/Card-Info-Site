@@ -14,7 +14,6 @@ function Header() {
 
   const handleChange = (event, { newValue }) => {
     setSearchTerm(newValue);
-    setGlobalSearchTerm(newValue);
   };
 
   const handleKeyPress = (event) => {

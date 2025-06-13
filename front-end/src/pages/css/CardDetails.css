@@ -48,12 +48,24 @@
     align-items: center;
   }
 
-  .Card_Detail_Box .image-container p{
+  .Card_Detail_Box .image-container p {
     width: -webkit-fill-available;
   }
 
-  .Card_Detail_Box .image-container a{
+  .Card_Detail_Box .image-container a {
     width: -webkit-fill-available;
+  }
+
+  .Card_Detail_Box {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 40px 0px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    margin: 0px 7px 7px 7px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 

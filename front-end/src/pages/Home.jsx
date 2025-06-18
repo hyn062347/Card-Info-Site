@@ -11,7 +11,7 @@ function Home() {
   useEffect(() => {
     const fetchCards = async () => {
       const promises = Array.from({ length: 5 }).map(() =>
-        axios.get('https://api.scryfall.com/cards/random')
+        axios.get(`https://api.scryfall.com/cards/random?t=${Date.now()}&r=${Math.random()}`)
       );
       try{
         const responses = await Promise.all(promises);

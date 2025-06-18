@@ -53,7 +53,7 @@ function CardDetails() {
 
   useEffect(() => {
     if (cardDetails) {
-      // console.log("📡 카드 요약 요청:", cardDetails);
+      // console.log(cardDetails);
       const eventSource = new EventSource(
         `${API_BASE_URL}/getCardSummary?name=${encodeURIComponent(
           cardDetails.name
@@ -64,13 +64,12 @@ function CardDetails() {
 
       // console.log(cardDetails.name, cardDetails.type_line, cardDetails.mana_cost, cardDetails.oracle_text);
       eventSource.onmessage = (event) => {
-        // console.log("📡 OpenAI 응답 수신:", event.data);
+        // console.log(event.data);
         if (event.data === '[DONE]') {
           eventSource.close(); // 스트리밍 종료
         } else {
           const fromattedData = event.data.replace(/<br>/g, '\n');
           setCardSummary((prev) => (prev === 'Loading...' ? fromattedData : prev + fromattedData)); // 실시간 데이터 업데이트
-
         }
       };
       // console.log(cardSummary);

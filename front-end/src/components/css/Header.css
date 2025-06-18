@@ -12,26 +12,6 @@
     height: 40px;
 }
 
-.header-bar-button {
-    background-color: white;
-    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    padding: 10px 15px;
-    font-size: large;
-    background: linear-gradient(45deg, #009dff, #8000ff);
-    color: transparent;
-    font-weight: bold;
-    -webkit-background-clip: text;
-    transition: all 0.2s ease;
-}
-
-.header-bar-button:hover {
-    background: linear-gradient(45deg, #009dff, #8000ff);
-    color: white;
-}
-
 .header-logo {
     width: 40px;
     height: 40px;
@@ -39,14 +19,72 @@
     border: none;
     border-radius: 50%;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .header-logo:hover {
     transform: scale(1.1);
-    transition: 0.2s;
 }
 
-@media (max-width: 600px) {
+/* Auto Complete Module */
+
+.custom-autocomplete {
+    width: 50%;
+    max-width: 1200px;
+    position: relative;
+}
+
+.custom-autocomplete .header-autocomplete-input {
+    width: 100%;
+    font-size: larger;
+    padding: 10px 0px;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    outline: none;
+    caret-color: #0044ff;
+    color: #0044ff;
+}
+
+.autocomplete-suggestion {
+    padding: 10px;
+    border-radius: 10px;
+    background: linear-gradient(45deg, #009dff, #8000ff);
+    color: white;
+    margin: 5px 0;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px 10px;
+    transition: all 0.3s ease;
+}
+
+.autocomplete-suggestion.highlighted {
+  background: #ffffff;
+  color: #0044ff;
+  transform: scale(1.02);
+  font-weight: bold;
+}
+
+.autocomplete-suggestion:hover {
+    transform: scale(1.02);
+}
+
+.autocomplete-suggestion-list {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+    border-radius: 20px;
+    border: none;
+    color: black;
+    list-style: none;
+    margin-top: 20px;
+    padding: 0;
+}
+
+@media (max-width: 900px) {
     .header-bar {
         background-color: white;
         border: none;
@@ -60,131 +98,35 @@
         height: 40px;
     }
 
-    /* Auto Suggest CSS */
-
-    .header-bar .react-autosuggest__container {
+    .custom-autocomplete {
         flex: 1;
+        position: relative;
     }
 
-    .header-bar .react-autosuggest__input {
-        border: none;
-        border-radius: 15px;
-        box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
-        outline: none;
-        font-size: large;
-        caret-color: #0044ff;
-        text-align: center;
-        color: #0044ff;
-        padding: 10px 15px;
-        width: calc(100% - 30px);
-    }
-
-    .header-bar .react-autosuggest__suggestions-list {
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+    .custom-autocomplete .header-autocomplete-input {
+        width: 100%;
+        font-size: larger;
         padding: 10px 0px;
-        margin: 0px 0px;
-        z-index: 1000;
-        background-color: white;
-        box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
-        border: none;
-        border-radius: 13px;
-    }
-
-    .header-bar .react-autosuggest__suggestion {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 10px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        cursor: pointer;
         border: none;
         border-radius: 15px;
-        background: linear-gradient(45deg, #009dff, #8000ff);
-        color: rgb(255, 255, 255);
-        transition: all 0.2s ease;
+        box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        outline: none;
+        caret-color: #0044ff;
+        color: #0044ff;
     }
-}
 
-/* Auto Suggest CSS */
-
-.header-bar .react-autosuggest__container {
-    width: 50%;
-}
-
-.header-bar .react-autosuggest__suggestions-container--open {
-    display: flex;
-    justify-content: center;
-}
-
-.header-bar .react-autosuggest__input {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
-    outline: none;
-    font-size: large;
-    caret-color: #0044ff;
-    text-align: center;
-    color: #0044ff;
-    padding: 10px 15px;
-    width: calc(100% - 30px);
-}
-
-.header-bar .react-autosuggest__suggestions-list {
+    .autocomplete-suggestion-list {
     position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 0px;
-    margin: 0px 0px;
-    width: calc(50% - 40px);
+    top: 100%;
+    width: 100%;
     z-index: 1000;
     background-color: white;
-    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
     border: none;
-    border-radius: 13px;
+    color: black;
+    list-style: none;
+    margin-top: 10px;
+    padding: 0;
 }
-
-.header-bar .react-autosuggest__suggestion {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    border: none;
-    border-radius: 15px;
-    background: linear-gradient(45deg, #009dff, #8000ff);
-    color: rgb(255, 255, 255);
-    width: calc(100% - 50px);
-    transition: all 0.2s ease;
 }
-
-.header-bar .react-autosuggest__suggestion--highlighted {
-    transform: scale(1.02);
-}
-
-/* 
-{
-  container:                'react-autosuggest__container',
-  containerOpen:            'react-autosuggest__container--open',
-  input:                    'react-autosuggest__input',
-  inputOpen:                'react-autosuggest__input--open',
-  inputFocused:             'react-autosuggest__input--focused',
-  suggestionsContainer:     'react-autosuggest__suggestions-container',
-  suggestionsContainerOpen: 'react-autosuggest__suggestions-container--open',
-  suggestionsList:          'react-autosuggest__suggestions-list',
-  suggestion:               'react-autosuggest__suggestion',
-  suggestionFirst:          'react-autosuggest__suggestion--first',
-  suggestionHighlighted:    'react-autosuggest__suggestion--highlighted',
-  sectionContainer:         'react-autosuggest__section-container',
-  sectionContainerFirst:    'react-autosuggest__section-container--first',
-  sectionTitle:             'react-autosuggest__section-title'
-}
-*/

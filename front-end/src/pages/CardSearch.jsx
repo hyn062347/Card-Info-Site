@@ -4,28 +4,28 @@ import { DataContext } from '../context/Datacontext';
 import axios from 'axios';
 import './css/CardSearch.css';
 import Header from '../components/Header';
+import cardBack from '../images/cardback.jpeg';
 
 function CardSearch() {
   const { globalSearchTerm, setGlobalSearchTerm } = useContext(DataContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [cardImages, setCardImages] = useState([]);
-  const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   // Global search term 처리
   useEffect(() => {
-    if (globalSearchTerm && !hasSearched) {
+    if (globalSearchTerm) {
       setSearchTerm(globalSearchTerm);
       handleSearch(globalSearchTerm);
-      setHasSearched(true);
       setGlobalSearchTerm('');
     }
   }, [globalSearchTerm]);
 
   // 카드 검색 기능
   const handleSearch = async (term = searchTerm) => {
-    console.log("Search");
+    setLoading(true);
     try {
       if (term.length > 2) {
         const response = await axios.get(
@@ -36,6 +36,7 @@ function CardSearch() {
         if (cards.length === 0) {
           setError('No cards found.');
           setCardImages([]);
+          setLoading(false);
         } else {
           const images = cards.map((card) => {
             if (card.image_uris) {
@@ -57,32 +58,56 @@ function CardSearch() {
           }).filter((card) => card.front);
 
           setCardImages(images);
+
+          const preloadImages = images.map(card =>
+            new Promise((resolve) => {
+              const img = new Image();
+              img.src = card.front;
+              img.onload = resolve;
+              img.onerror = resolve;
+            })
+          );
+
+          await Promise.all(preloadImages);
+          setLoading(false);
           setError('');
         }
       }
     } catch (error) {
       setError('Error fetching data from Scryfall API');
+      setLoading(false);
     }
   };
 
 
   return (
     <div className="search_page_main">
-      <Header/>
+      <Header />
       <div className="search_page_cards_container">
-        {cardImages.map((card, index) => (
-          <div className="search_page_card_box" key={index}>
-            <img
-              className="search_page_card_image"
-              width={350}
-              src={card.front}
-              alt="card front"
-              onMouseOver={(e) => (e.currentTarget.src = card.back || card.front)}
-              onMouseOut={(e) => (e.currentTarget.src = card.front)}
-              onClick={() => navigate(`/images/${card.oracle_id}`)}
-            />
-          </div>
-        ))}
+        {loading
+          ? Array.from({ length: cardImages.length}).map((_, index) => (
+            <div className="search_page_card_box" key={index}>
+              <img
+                className="search_page_card_image"
+                width={350}
+                src={cardBack}
+                alt="card back"
+              />
+            </div>
+          ))
+          : cardImages.map((card, index) => (
+            <div className="search_page_card_box" key={index}>
+              <img
+                className="search_page_card_image"
+                width={350}
+                src={card.front}
+                alt="card front"
+                onMouseOver={(e) => (e.currentTarget.src = card.back || card.front)}
+                onMouseOut={(e) => (e.currentTarget.src = card.front)}
+                onClick={() => navigate(`/images/${card.oracle_id}`)}
+              />
+            </div>
+          ))}
       </div>
     </div>
   );

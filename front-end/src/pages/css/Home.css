@@ -70,20 +70,60 @@
 }
 
 .floating_card:hover {
-  transform: translateY(-20%);  
+  transform: translateY(-20%);
 }
 
-@media (max-width: 900px){
+@media (max-width: 900px) {
   .floating_cards_container {
-    flex-wrap: wrap;
-    bottom: 1%;           /*더 깊숙이 숨겨야 화면 안 끊김 */
-    width: 110%;
+    position: fixed;
+    bottom: -250px;
     left: 50%;
     transform: translateX(-50%);
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    justify-items: center;
+    gap: 10px;
   }
 
   .floating_card {
-    width: 150px;
-    margin: -120px 0px;        /* 카드 폭이 줄면 겹침폭도 축소 */
+    width: 250px;
+    margin-top: -290px;
+    flex: 0 0 calc(33.333%);
+  }
+
+  .floating_card:nth-child(-n+3) {
+    z-index: 1;
+  }
+
+  .floating_card:nth-child(n+4) {
+    z-index: 2;
+  }
+
+  .floating_card:nth-child(1) {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+  }
+
+  .floating_card:nth-child(2) {
+    grid-column: 3 / span 2;
+    grid-row: 1;
+  }
+
+  .floating_card:nth-child(3) {
+    grid-column: 5 / span 2;
+    grid-row: 1;
+  }
+
+  .floating_card:nth-child(4) {
+    grid-column: 1 / span 3;
+    grid-row: 2;
+    justify-self: flex-end;
+  }
+
+  .floating_card:nth-child(5) {
+    grid-column: 4 / span 3;
+    grid-row: 2;
+    justify-self: flex-start;
   }
 }

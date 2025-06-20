@@ -139,31 +139,52 @@ function CardDetails() {
   };
 
   const renderCardImages = (cardDetails) => {
-    if (cardDetails.card_faces) {
-      return (
+    // if (cardDetails.card_faces) {
+    //   return (
+    //     <>
+    //       <img
+    //         src={cardDetails.card_faces[0].image_uris.normal}
+    //         alt="Card Front"
+    //       />
+    //       <img
+    //         src={cardDetails.card_faces[1].image_uris.normal}
+    //         alt="Card Back"
+    //       />
+    //     </>
+    //   );
+    // }
+
+    // if (cardDetails.image_uris) {
+    //   return (
+    //     <img
+    //       src={cardDetails.image_uris.normal}
+    //       alt="Card Front"
+    //     />
+    //   );
+    // }
+
+    // return <p>No images available</p>; // 이미지가 없을 경우 기본 메시지
+
+    const front = cardDetails.image_uris?.normal
+      ?? cardDetails.card_faces?.[0]?.image_uris?.normal
+      ?? null;
+
+    const back = cardDetails.card_faces?.[1]?.image_uris?.normal ?? null;
+
+    if(front && back){
+      return(
         <>
-          <img
-            src={cardDetails.card_faces[0].image_uris.normal}
-            alt="Card Front"
-          />
-          <img
-            src={cardDetails.card_faces[1].image_uris.normal}
-            alt="Card Back"
-          />
+          <img src={front} alt="Card Front" />
+          <img src={back} alt="Card Back" />
         </>
-      );
+      )
     }
 
-    if (cardDetails.image_uris) {
-      return (
-        <img
-          src={cardDetails.image_uris.normal}
-          alt="Card Front"
-        />
-      );
+    if(front){
+      return <img src={front} alt="Card Front" />;
     }
 
-    return <p>No images available</p>; // 이미지가 없을 경우 기본 메시지
+    return <p>No images available.</p>;
   };
 
   const renderDetail = (cardFace) => {

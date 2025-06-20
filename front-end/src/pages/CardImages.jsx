@@ -16,11 +16,17 @@ function CardImages() {
     const fetchCardVersions = async () => {
       try {
         const response = await axios.get(`https://api.scryfall.com/cards/search?order=released&q=oracleid%3A${oracleId}&unique=prints`);
-        const versions = response.data.data.map(card => ({
-          id: card.id,
-          front: card.image_uris ? card.image_uris.normal : (card.card_faces ? card.card_faces[0].image_uris.normal : null),
-          back: card.card_faces ? card.card_faces[1].image_uris.normal : null
-        })).filter(card => card.front);
+        const versions = response.data.data
+          .map(card => {
+            // single-face or first face for front image
+            const front = card.image_uris?.normal
+              ?? card.card_faces?.[0]?.image_uris?.normal
+              ?? null;
+            // second face only if available
+            const back = card.card_faces?.[1]?.image_uris?.normal ?? null;
+            return { id: card.id, front, back };
+          })
+          .filter(v => v.front);
         setCardVersions(versions);
 
         const preloadImages = versions.map(card =>

@@ -19,15 +19,19 @@ function Header() {
     navigate(`/search`);
   }
 
-useEffect(() => {
-  if (searchTerm.length > 2) {
-    axios.get(`https://api.scryfall.com/cards/autocomplete?q=${searchTerm}`)
-      .then(response => setSuggestions(response.data.data))
-      .catch(error => console.error("Error fetching autocomplete suggestions", error));
-  }
-  console.log(globalSearchTerm);
-  setHighlightedIndex(-1); // Reset selection
-}, [globalSearchTerm, searchTerm]);
+  useEffect(() => {
+    if (searchTerm.length > 2) {
+      axios.get(`https://api.scryfall.com/cards/autocomplete?q=${searchTerm}`)
+        .then(response => setSuggestions(response.data.data))
+        .catch(error => console.error("Error fetching autocomplete suggestions", error));
+    }
+    else {
+      // 입력이 짧아지면 이전 제안을 모두 지우기
+      setSuggestions([]);
+    }
+    console.log(globalSearchTerm);
+    setHighlightedIndex(-1); // Reset selection
+  }, [globalSearchTerm, searchTerm]);
 
 
   return (

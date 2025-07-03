@@ -29,28 +29,27 @@ function CardDetails() {
     fetchCardDetails();
   }, [cardId]);
 
-useEffect(() => {
-    if (!cardId) return;
+  useEffect(() => {
+    if (cardDetails) {
+      const fetchCardKingdomPrice = async (cardName, collectorNumber) => {
+        try {
+          const simplifiedCardName = cardName.includes('//')
+            ? cardName.split('//')[0].trim()
+            : cardName;
+          const modifiedCollectorNumber = collectorNumber.replace(/\D/g, ''); // \D는 숫자가 아닌 문자 제거
+          const response = await axios.get(`${SERVERLESS_FNC_URL}/getCardKingdomPrice`, {
+            params: { cardName: simplifiedCardName, collectorNumber: modifiedCollectorNumber },
+          });
+          setCardKingdomPrice(response.data.nonFoilPrice);
+          setCardKingdomFoilPrice(response.data.foilPrice);
+        } catch (error) {
+          console.error('Error fetching price:', error);
+        }
+      };
 
-    async function fetchPrice(id) {
-      try {
-        const resp = await fetch(
-          `${SERVERLESS_FNC_URL}/getCardPrice?scry=${id}`
-        );
-        if (!resp.ok) throw new Error(await resp.text());
-        const { normal, foil } = await resp.json();
-        setCardKingdomPrice(normal ?? "N/A");
-        setCardKingdomFoilPrice(foil   ?? "N/A");
-      } catch (e) {
-        console.error(e);
-        setError("가격을 불러오지 못했습니다.");
-      }
+      fetchCardKingdomPrice(cardDetails.name, cardDetails.collector_number);
     }
-
-    fetchPrice(cardId);
-  }, [cardId]);
-
-
+  }, [cardDetails]);
 
   useEffect(() => {
     if (cardDetails) {

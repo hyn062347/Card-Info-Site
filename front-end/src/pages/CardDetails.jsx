@@ -11,6 +11,7 @@ function CardDetails() {
   const [cardKingdomPrice, setCardKingdomPrice] = useState('Loading...');
   const [cardKingdomFoilPrice, setCardKingdomFoilPrice] = useState('Loading...');
   const [cardSummary, setCardSummary] = useState('Loading...');
+  const [ error, setError ] = useState(null);
 
   // Netlify Functions API Base URL 설정
   const API_BASE_URL = '/api';

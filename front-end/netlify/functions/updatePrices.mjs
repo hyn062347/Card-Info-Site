@@ -24,7 +24,7 @@ export default async function updatePrices(request, context) {
     gunzipSync(Buffer.from(buffer)).toString("utf8")
   );
   const store = getStore("prices");
-  console.log("Writing Blob: Prices", json.data);
+  console.log("Writing Blob: Prices");
   await store.set("allPricesToday", JSON.stringify(json.data));
   // scheduled 함수는 응답을 반드시 반환할 필요가 없습니다
 }

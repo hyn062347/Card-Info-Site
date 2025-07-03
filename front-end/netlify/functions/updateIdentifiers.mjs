@@ -50,7 +50,7 @@ export default async function updateIdentifiers(request, context) {
 
   // ③ Blobs 스토어에 저장
   const store = getStore("prices");
-  console.log("Writing a Blob: Identifiers", map);
+  console.log("Writing a Blob: Identifiers");
   await store.set(
     "scry2uuid",
     JSON.stringify(map),

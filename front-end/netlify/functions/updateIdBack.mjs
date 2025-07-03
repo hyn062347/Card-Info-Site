@@ -6,8 +6,6 @@ import fetch from "node-fetch";
 
 const gunzip = promisify(zlib.gunzip);
 
-// Background Function: on-demand, 최대 15분 실행
-export const background = true;
 export default async function updateIdentifiersBackground(request, context) {
   // ① 파일 다운로드 & 압축 해제
   const url = "https://mtgjson.com/api/v5/AllIdentifiers.json.gz";

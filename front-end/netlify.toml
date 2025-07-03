@@ -14,11 +14,3 @@
 [[edge_functions]]
   path = "/api/getCardSummary"
   function = "getCardSummary"
-
-# CardKingdom 가격 제공
-[build]
-command = """
-  node netlify/functions/updateIdentifiers.mjs && \
-  node netlify/functions/updatePrices.mjs && \
-  npm run build
-"""

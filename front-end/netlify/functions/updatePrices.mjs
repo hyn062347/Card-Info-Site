@@ -1,6 +1,6 @@
 import { getStore } from "@netlify/blobs";
 import { schedule } from "@netlify/functions";
-export const config = { schedule: "@daily" };   // 매일 00:00 UTC
+export const config = { schedule: "@hourly" };   // 매일 00:00 UTC
 
 export default schedule(async () => {
   const res = await fetch(

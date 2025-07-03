@@ -27,6 +27,7 @@ export default schedule(async () => {
 
   // ────── ④ Blobs 스토어에 저장 ──────
   const store = getStore("prices");            // 같은 스토어 재사용
+  console.log("Writing a Blob: Identifiers", map)
   await store.set("scry2uuid", JSON.stringify(map), {
     metadata: { updated: new Date().toISOString() },
   });

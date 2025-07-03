@@ -11,5 +11,6 @@ export default schedule(async () => {
     z.gunzipSync(Buffer.from(buffer)).toString("utf8")
   ));
   const store = getStore("prices");
+  console.log("Writing Blob: Prices", json.data);
   await store.set("allPricesToday", JSON.stringify(json.data));
 });

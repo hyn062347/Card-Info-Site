@@ -29,8 +29,7 @@ export default async function updateIdentifiersBackground(request, context) {
     JSON.stringify(map),
     { metadata: { updated: new Date().toISOString() } }
   );
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: "updateIdentifiersBackground completed" })
-  };
+  return new Response(JSON.stringify({ message: "updateIdentifiersBackground completed" }), {
+    status: 200
+  });
 }

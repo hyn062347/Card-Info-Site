@@ -10,9 +10,6 @@
   node_bundler = "esbuild" # 최신 ESBuild 사용
   external_node_modules = ["@sparticuz/chromium", "puppeteer-core"]
 
-[functions.updateIdentifiers]
-  maxDuration = 18          # updateIdentifiers만 18초로
-
 # Edge Functions 설정 (스트리밍을 위한 Edge 환경)
 [[edge_functions]]
   path = "/api/getCardSummary"

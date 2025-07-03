@@ -18,7 +18,5 @@
 # CardKingdom 가격 제공
 [build]
 """
-node netlify/functions/updateIdentifiers.mjs && \
-node netlify/functions/updatePrices.mjs && \
-npm run build
+node netlify/functions/updateIdentifiers.mjs && node netlify/functions/updatePrices.mjs && npm run build
 """

@@ -6,8 +6,8 @@ import fetch from "node-fetch";
 
 const gunzip = promisify(zlib.gunzip);
 
-// ────── ① 주 1회 월요일 00:15 UTC 실행 ──────
-export const config = { schedule: "@hourly" }; // @weekly 도 가능
+// 매 시간 0·15·30·45분마다 실행 (UTC)
+export const config = { schedule: "0,15,30,45 * * * *" };
 
 export default schedule(async () => {
   // ────── ② 파일 다운로드 & 압축 해제 ──────

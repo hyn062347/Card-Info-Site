@@ -1,7 +1,7 @@
 import { getStore } from "@netlify/blobs";
 import { gunzipSync } from "node:zlib";
 // 매 시간 0·15·30·45분마다 실행 (UTC)
-export const config = { schedule: "*/10 * * * *" };
+export const config = { schedule: "0 * * * *" };
 
 // export default schedule(async () => {
 //   const res = await fetch(

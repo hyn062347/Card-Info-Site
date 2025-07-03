@@ -11,5 +11,5 @@ export default schedule(async () => {
     z.gunzipSync(Buffer.from(buffer)).toString("utf8")
   ));
   const store = getStore("prices");
-  await store.set("allPricesToday", JSON.stringify(json));
+  await store.set("allPricesToday", JSON.stringify(json.data));
 });

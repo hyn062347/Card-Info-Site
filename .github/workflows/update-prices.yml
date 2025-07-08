@@ -29,7 +29,7 @@ jobs:
 
       - name: Parse uuid → price map
         run: |
-          python ck_retail.py \
+          python scripts/ck_retail.py \
             data/AllPrices.json.gz \
             data/ck_retail.csv \
             --csv

@@ -9,7 +9,9 @@ const pool = new Pool({ connectionString: process.env.NETLIFY_DATABASE_URL });
 // Netlify Functions 2.x 형식
 export default async (req, res) => {
   // ?scry=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-  const scry = req.query.scry;
+  // Parse ?scry=<id> from the request URL (Netlify Functions 2.x request has no `query` field)
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const scry = url.searchParams.get('scry');
   if (!scry) return res.status(400).json({ error: 'missing scry param' });
 
   try {

@@ -1,0 +1,40 @@
+name: Update scryfall → uuid map (weekly)
+
+on:
+  push:
+  schedule:
+    # 매주 일요일 03:00(KST) ≒ 토요일 18:00(UTC)
+    - cron:  '0 18 * * 6'
+  workflow_dispatch:
+
+jobs:
+  build-map:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Download AllIdentifiers.json.gz
+        run: |
+          mkdir -p data
+          curl -L https://mtgjson.com/api/v5/AllIdentifiers.json.gz -o data/AllIdentifiers.json.gz
+
+      - name: Build scry2uuid map
+        run: |
+          python scripts/scry2uuid.py \
+            data/AllIdentifiers.json.gz \
+            data/scry2uuid.json
+
+      # (선택) 가격 워크플로에서 받아쓰도록 아티팩트로 보관
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scry2uuid
+          path: data/scry2uuid.json

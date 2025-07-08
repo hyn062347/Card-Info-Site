@@ -29,7 +29,7 @@ export default async (req) => {
 
     // 2) Blobs 스토어에서 매핑·가격 가져오기
     const store = getStore("prices");             // update-* 와 동일 스토어
-    const priceJSON = await store.get("pricesToday");
+    const priceJSON = await store.get("allPricesToday");
     if (!priceJSON)
         return new Response(
             JSON.stringify({ error: "Blob not ready yet" }),

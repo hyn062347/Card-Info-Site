@@ -11,7 +11,7 @@ function CardDetails() {
   const [cardKingdomPrice, setCardKingdomPrice] = useState('Loading...');
   const [cardKingdomFoilPrice, setCardKingdomFoilPrice] = useState('Loading...');
   const [cardSummary, setCardSummary] = useState('Loading...');
-  const [ error, setError ] = useState(null);
+  const [error, setError] = useState(null);
 
   // Netlify Functions API Base URL 설정
   const API_BASE_URL = '/api';
@@ -30,7 +30,7 @@ function CardDetails() {
     fetchCardDetails();
   }, [cardId]);
 
-useEffect(() => {
+  useEffect(() => {
     if (!cardId) return;
 
     async function fetchPrice(id) {
@@ -41,7 +41,7 @@ useEffect(() => {
         if (!resp.ok) throw new Error(await resp.text());
         const { normal, foil } = await resp.json();
         setCardKingdomPrice(normal ?? "N/A");
-        setCardKingdomFoilPrice(foil   ?? "N/A");
+        setCardKingdomFoilPrice(foil ?? "N/A");
       } catch (e) {
         console.error(e);
         setError("가격을 불러오지 못했습니다.");
@@ -146,8 +146,8 @@ useEffect(() => {
 
     const back = cardDetails.card_faces?.[1]?.image_uris?.normal ?? null;
 
-    if(front && back){
-      return(
+    if (front && back) {
+      return (
         <>
           <img src={front} alt="Card Front" />
           <img src={back} alt="Card Back" />
@@ -155,7 +155,7 @@ useEffect(() => {
       )
     }
 
-    if(front){
+    if (front) {
       return <img src={front} alt="Card Front" />;
     }
 

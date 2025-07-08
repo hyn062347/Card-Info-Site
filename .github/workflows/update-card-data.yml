@@ -1,0 +1,81 @@
+name: Update card identifiers & prices
+
+on:
+  push:
+  # 한국시간 매일 04:00 (UTC 19:00)
+  schedule:
+    - cron: '0 19 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      # -----------------------------------------------------------
+      # 1) AllIdentifiers: 주 1회(일요일 03:00 KST)만 다운로드 & 파싱
+      #    - 평소에는 이전 결과를 캐시에서 꺼내 씀.
+      # -----------------------------------------------------------
+      - name: Restore scry2uuid cache
+        id: cache-scry
+        uses: actions/cache/restore@v4
+        with:
+          path: data/scry2uuid.json           # 캐시 대상
+          key: scry2uuid                      # 고정키 (사실상 LRU 7일)
+
+      - name: Conditionally rebuild scry2uuid
+        if: steps.cache-scry.outputs.cache-hit != 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          mkdir -p data
+          echo "No cached scry2uuid.json — rebuilding…"
+          curl -L https://mtgjson.com/api/v5/AllIdentifiers.json.gz -o data/AllIdentifiers.json.gz
+          python scripts/scry2uuid.py \
+            data/AllIdentifiers.json.gz \
+            data/scry2uuid.json
+
+      - name: Save scry2uuid to cache
+        if: steps.cache-scry.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: data/scry2uuid.json
+          key: scry2uuid                      # 동일키로 덮어쓰기
+
+      # -----------------------------------------------------------
+      # 2) AllPrices: 매일 다운로드 & 파싱
+      # -----------------------------------------------------------
+      - name: Download AllPrices.json.gz
+        run: |
+          mkdir -p data
+          curl -L https://mtgjson.com/api/v5/AllPrices.json.gz -o data/AllPrices.json.gz
+
+      - name: Parse uuid → price map
+        run: |
+          python scripts/ck_retail.py \
+            data/AllPrices.json.gz \
+            data/ck_retail.csv --csv
+
+      # -----------------------------------------------------------
+      # 3) 조인 & Neon 업서트
+      # -----------------------------------------------------------
+      - name: Merge price + scry2uuid
+        run: |
+          python scripts/merge_prices.py \
+            data/ck_retail.csv \
+            data/scry2uuid.json \
+            data/price_records.csv
+
+      - name: Upsert into Neon
+        env:
+          DATABASE_URL: ${{ secrets.NETLIFY_DATABASE_URL }}
+        run: |
+          python scripts/upsert_prices.py data/price_records.csv
